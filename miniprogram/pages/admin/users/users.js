@@ -47,7 +47,7 @@ Page({
     wx.cloud.callFunction({
       name: 'manageUsers',
       data: {
-        action: 'getUsers',
+        action: 'getUsersWithHistory',  // 使用新的云函数方法，获取包含历史使用记录的用户列表
         page: this.data.currentPage,
         pageSize: this.data.pageSize,
         searchValue: this.data.searchValue,
@@ -64,10 +64,22 @@ Page({
           
           for (var i = 0; i < users.length; i++) {
             var user = users[i];
-            // 计算已使用次数
+            // 获取已使用次数（优先使用从云函数返回的实际历史记录数）
+            var usedUsage = user.usedUsage || 0;
             var totalUsage = user.totalUsage || 0;
             var remainingUsage = user.remainingUsage || 0;
-            var usedUsage = totalUsage - remainingUsage;
+            
+            // 如果没有从云函数获取到实际使用次数，则计算
+            if (usedUsage === 0 && !user.totalHistories) {
+              usedUsage = totalUsage - remainingUsage;
+              
+              // 确保已用次数不是负数
+              if (usedUsage < 0) {
+                usedUsage = 0;
+                // 修正总使用次数
+                totalUsage = remainingUsage;
+              }
+            }
             
             // 格式化时间
             var createDate = user.createdAt ? new Date(user.createdAt) : new Date();
@@ -83,7 +95,7 @@ Page({
               avatarUrl: user.avatarUrl,
               role: user.role,
               remainingUsage: user.remainingUsage,
-              totalUsage: user.totalUsage,
+              totalUsage: totalUsage, // 使用修正后的总使用次数
               createdAt: user.createdAt,
               updatedAt: user.updatedAt,
               // 添加处理后的字段

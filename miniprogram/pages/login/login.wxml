@@ -7,8 +7,46 @@
     <view class="subtitle">提升邀约效率，打造专业形象</view>
   </view>
 
-  <view class="login-container">
-    <view class="login-tip">请使用微信账号登录</view>
+  <!-- 已注册用户简化登录界面 -->
+  <view class="login-container" wx:if="{{showSimpleLogin}}">
+    <view class="user-info simple-login">
+      <image class="avatar-large" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <view class="welcome-back">欢迎回来，{{nickName}}</view>
+    </view>
+    
+    <view class="btn-container">
+      <button class="login-btn" bindtap="login">一键登录</button>
+    </view>
+    
+    <view class="privacy-policy">
+      登录即表示您已同意
+      <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+      和
+      <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+    </view>
+  </view>
+
+  <!-- 新用户完整注册登录界面 -->
+  <view class="login-container" wx:else>
+    <view class="login-steps">
+      <view class="step {{currentStep >= 1 ? 'active' : ''}}">1. 选择头像和昵称</view>
+      <view class="step {{currentStep >= 2 ? 'active' : ''}}">2. 同意授权</view>
+      <view class="step {{currentStep >= 3 ? 'active' : ''}}">3. 点击登录</view>
+    </view>
+    
+    <view class="user-info">
+      <view class="avatar-tip">点击下方选择头像</view>
+      <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatarUrl}}"></image>
+        <view class="avatar-edit-icon" wx:if="{{avatarUrl == '/images/tabbar/my.png'}}">+</view>
+      </button>
+      <view class="nickname-wrapper">
+        <view class="nickname-tip">请输入您的昵称</view>
+        <input type="nickname" class="nickname-input" placeholder="点击输入昵称" bindinput="onInputNickname" value="{{nickName}}" />
+      </view>
+    </view>
+    
+    <view class="login-tip">{{(avatarUrl == '/images/tabbar/my.png') ? '请先点击选择头像' : (!nickName ? '请输入您的昵称' : '信息已完善，请继续')}}</view>
     
     <view class="auth-agreement">
       <view class="checkbox {{hasUserAgreed ? 'checked' : ''}}" bindtap="toggleAgreement">
@@ -17,9 +55,11 @@
       <view class="agreement-text" bindtap="toggleAgreement">我同意授权获取头像和昵称</view>
     </view>
     
-    <button class="login-btn {{!hasUserAgreed ? 'disabled' : ''}}" bindtap="login">微信一键登录</button>
+    <view class="btn-container">
+      <button class="login-btn {{!canLogin() ? 'disabled' : ''}}" bindtap="login">微信一键登录</button>
+    </view>
     
-    <view class="auth-tip">登录时请在弹出的对话框中点击"允许"</view>
+    <view class="auth-tip">{{(avatarUrl == '/images/tabbar/my.png') ? '请先点击上方选择头像' : (!nickName ? '请先输入您的昵称' : (hasUserAgreed ? '点击登录按钮完成登录' : '请勾选同意授权选项'))}}</view>
     
     <view class="privacy-policy">
       登录即表示您已同意

@@ -13,6 +13,8 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
   
+  console.log('获取用户信息，openid:', openid);
+  
   try {
     // 查询用户信息
     const userResult = await usersCollection.where({
@@ -27,11 +29,17 @@ exports.main = async (event, context) => {
     }
     
     const userData = userResult.data[0];
+    console.log('获取到用户信息:', userData);
     
+    // 确保返回头像和昵称信息
     return {
       code: 0,
       msg: '获取成功',
-      data: userData
+      data: {
+        ...userData,
+        avatarUrl: userData.avatarUrl || '',
+        nickName: userData.nickName || ''
+      }
     };
   } catch (error) {
     console.error('获取用户信息出错:', error);

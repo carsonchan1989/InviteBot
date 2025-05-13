@@ -1,0 +1,92 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 110rpx;
+  background: white;
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-bar-border {
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  transform: scaleY(0.5);
+}
+
+.tab-bar-item {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.tab-bar-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background-color: #7B55D0;
+  border-radius: 3px;
+}
+
+.icon-container {
+  position: relative;
+  height: 54rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  width: 54rpx;
+  height: 54rpx;
+  margin-bottom: 10rpx;
+}
+
+.icon-selected {
+  width: 54rpx;
+  height: 54rpx;
+  margin-bottom: 10rpx;
+}
+
+.text-container {
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+/* 使用CSS绘制图标 */
+.tab-icon {
+  width: 54rpx;
+  height: 54rpx;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tab-icon-generate {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'%3E%3C/path%3E%3Cpolyline points='9 22 9 12 15 12 15 22'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.tab-icon-generate-selected {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237B55D0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'%3E%3C/path%3E%3Cpolyline points='9 22 9 12 15 12 15 22'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.tab-icon-my {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'%3E%3C/path%3E%3Ccircle cx='12' cy='7' r='4'%3E%3C/circle%3E%3C/svg%3E");
+}
+
+.tab-icon-my-selected {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237B55D0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'%3E%3C/path%3E%3Ccircle cx='12' cy='7' r='4'%3E%3C/circle%3E%3C/svg%3E");
+} 

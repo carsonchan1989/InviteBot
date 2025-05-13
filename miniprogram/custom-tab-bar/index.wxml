@@ -1,0 +1,20 @@
+<view class="tab-bar">
+  <view class="tab-bar-border"></view>
+  <view wx:for="{{list}}" wx:key="index" class="tab-bar-item {{selected === index ? 'active' : ''}}" data-path="{{item.pagePath}}" data-index="{{index}}" bindtap="switchTab">
+    <view class="icon-container">
+      <view class="{{selected === index ? 'icon-selected' : 'icon'}}">
+        <block wx:if="{{index === 0}}">
+          <view wx:if="{{selected === index}}" class="tab-icon tab-icon-generate-selected"></view>
+          <view wx:else class="tab-icon tab-icon-generate"></view>
+        </block>
+        <block wx:if="{{index === 1}}">
+          <view wx:if="{{selected === index}}" class="tab-icon tab-icon-my-selected"></view>
+          <view wx:else class="tab-icon tab-icon-my"></view>
+        </block>
+      </view>
+    </view>
+    <view class="text-container">
+      <view style="color: {{selected === index ? selectedColor : color}}">{{item.text}}</view>
+    </view>
+  </view>
+</view> 

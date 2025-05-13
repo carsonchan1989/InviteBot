@@ -11,8 +11,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 120rpx;
-  margin-bottom: 100rpx;
+  margin-top: 100rpx;
+  margin-bottom: 60rpx;
 }
 
 .logo {
@@ -63,13 +63,150 @@
 
 .login-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 已注册用户简化登录样式 */
+.simple-login {
+  padding: 40rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+}
+
+.avatar-large {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  margin-bottom: 30rpx;
+  border: 4rpx solid rgba(123, 85, 208, 0.2);
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.welcome-back {
+  font-size: 34rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+/* 登录步骤提示 */
+.login-steps {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+
+.step {
+  font-size: 24rpx;
+  color: #999;
+  position: relative;
+  padding-bottom: 16rpx;
+}
+
+.step.active {
+  color: #7B55D0;
+  font-weight: bold;
+}
+
+.step.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rpx;
+  background-color: #7B55D0;
+  border-radius: 2rpx;
+}
+
+/* 用户信息区域 */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.avatar-tip {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  text-align: center;
+}
+
+.avatar-wrapper {
+  background-color: transparent;
+  padding: 0;
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  border: none;
+  position: relative;
+}
+
+.avatar-wrapper::after {
+  border: none;
+}
+
+.avatar {
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+}
+
+.avatar-edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40rpx;
+  height: 40rpx;
+  background-color: #7B55D0;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.nickname-wrapper {
+  width: 80%;
+  margin-top: 10rpx;
+}
+
+.nickname-tip {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  text-align: center;
+}
+
+.nickname-input {
+  height: 80rpx;
+  border-bottom: 1rpx solid #e0e0e0;
+  text-align: center;
+  font-size: 30rpx;
+  color: #333;
 }
 
 .login-tip {
   font-size: 28rpx;
-  color: #666;
+  color: #7B55D0;
   text-align: center;
-  margin-bottom: 40rpx;
+  margin-bottom: 30rpx;
+  font-weight: bold;
 }
 
 /* 授权复选框样式 */
@@ -108,6 +245,14 @@
   color: #333;
 }
 
+/* 按钮容器 */
+.btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
 .login-btn {
   width: 100%;
   height: 88rpx;
@@ -116,12 +261,17 @@
   color: #fff;
   border-radius: 10rpx;
   font-size: 32rpx;
-  margin-bottom: 20rpx;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease; /* 添加过渡效果 */
 }
 
 .login-btn.disabled {
   background-color: #cccccc;
   color: #999999;
+  pointer-events: none; /* 禁用点击 */
 }
 
 .auth-tip {

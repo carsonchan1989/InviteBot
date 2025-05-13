@@ -1,24 +1,28 @@
 /* pages/index/index.wxss */
 .container {
   padding: 30rpx;
+  padding-bottom: 160rpx; /* 增加底部间距，防止TabBar遮挡 */
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 30rpx;
+  text-align: center;
 }
 
 .title {
   font-size: 36rpx;
   font-weight: bold;
   color: #333;
+  margin-bottom: 10rpx;
 }
 
 .usage {
   font-size: 28rpx;
   color: #7B55D0;
+  margin-top: 10rpx;
 }
 
 .form-container {
@@ -54,21 +58,77 @@
   margin-top: 50rpx;
   display: flex;
   flex-direction: column;
+  margin-bottom: 80rpx; /* 增加底部间距，防止按钮被遮挡 */
+}
+
+.action-section {
+  margin: 30rpx 0 100rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .primary-btn {
-  background-color: #7B55D0;
+  background: linear-gradient(135deg, #8a63d2, #6c45c4);
   color: #fff;
-  border-radius: 8rpx;
+  border-radius: 20rpx;
   font-size: 32rpx;
   margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 0;
+  line-height: 1.4;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  box-shadow: 0 4rpx 16rpx rgba(123, 85, 208, 0.2);
+}
+
+.primary-btn::after {
+  border: none;
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(123, 85, 208, 0.2);
+}
+
+.wait-text {
+  font-size: 24rpx;
+  display: block;
+  margin-top: 8rpx;
+  opacity: 0.8;
 }
 
 .secondary-btn {
-  background-color: #f0f0f0;
-  color: #333;
-  border-radius: 8rpx;
+  background-color: #f5f5f5;
+  color: #666;
+  border-radius: 20rpx;
   font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  line-height: 88rpx;
+  transition: all 0.3s;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.secondary-btn::after {
+  border: none;
+}
+
+.secondary-btn:active {
+  transform: scale(0.98);
+  background-color: #eaeaea;
 }
 
 /* 添加必填项标记样式 */

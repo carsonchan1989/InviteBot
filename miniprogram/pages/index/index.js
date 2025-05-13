@@ -17,6 +17,13 @@ Page({
   },
 
   onShow: function() {
+    // 设置自定义tabBar的选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 0
+      });
+    }
+    
     // 每次页面显示时更新用户信息
     this.getUserInfo();
   },
@@ -24,9 +31,32 @@ Page({
   // 获取用户信息
   getUserInfo: function() {
     const app = getApp();
-    this.setData({
-      remainingUsage: app.globalData.remainingUsage || 0
-    });
+    
+    // 如果应用已准备好，直接使用全局数据
+    if (app.globalData.isAppReady) {
+      this.setData({
+        remainingUsage: app.globalData.remainingUsage || 0
+      });
+      console.log('首页使用全局数据，剩余次数:', app.globalData.remainingUsage);
+    } else {
+      // 否则等待数据加载完成
+      console.log('等待用户数据加载...');
+      const checkReady = setInterval(() => {
+        if (app.globalData.isAppReady) {
+          clearInterval(checkReady);
+          this.setData({
+            remainingUsage: app.globalData.remainingUsage || 0
+          });
+          console.log('首页数据加载完成，剩余次数:', app.globalData.remainingUsage);
+        }
+      }, 300);
+      
+      // 设置最长等待时间，避免无限等待
+      setTimeout(() => {
+        clearInterval(checkReady);
+        console.log('等待超时，使用当前值');
+      }, 5000);
+    }
   },
 
   // 日期选择器变化事件

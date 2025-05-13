@@ -1,7 +1,12 @@
 Page({
   data: {
     isLoading: false,
-    hasUserAgreed: false  // 用户是否同意授权
+    hasUserAgreed: false,  // 用户是否同意授权
+    avatarUrl: '/images/tabbar/my.png',  // 默认头像
+    nickName: '',  // 用户昵称
+    currentStep: 1,  // 当前步骤：1-选择头像昵称, 2-同意授权, 3-登录
+    isRegistered: false,  // 是否已注册用户
+    showSimpleLogin: false  // 显示简化登录界面
   },
 
   onLoad: function(options) {
@@ -9,7 +14,61 @@ Page({
     const app = getApp();
     if (app.globalData.isLoggedIn) {
       this.redirectToIndex();
+      return;
     }
+
+    // 检查是否已注册用户
+    this.checkRegisteredUser();
+  },
+
+  // 检查是否已注册用户
+  checkRegisteredUser: function() {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
+    });
+
+    wx.cloud.callFunction({
+      name: 'checkUser',
+      success: res => {
+        console.log('[云函数] [checkUser] 调用成功', res);
+        
+        if (res.result && res.result.code === 0) {
+          const { isRegistered, userInfo } = res.result;
+          
+          if (isRegistered && userInfo) {
+            // 已注册用户，设置用户信息并显示简化登录界面
+            this.setData({
+              isRegistered: true,
+              showSimpleLogin: true,
+              avatarUrl: userInfo.avatarUrl || '/images/tabbar/my.png',
+              nickName: userInfo.nickName || '',
+              hasUserAgreed: true  // 已注册用户默认已同意
+            });
+          } else {
+            // 未注册用户，显示完整注册界面
+            this.setData({
+              isRegistered: false,
+              showSimpleLogin: false
+            });
+          }
+        }
+        
+        this.updateCurrentStep();
+      },
+      fail: err => {
+        console.error('[云函数] [checkUser] 调用失败', err);
+        // 调用失败，显示完整注册界面
+        this.setData({
+          isRegistered: false,
+          showSimpleLogin: false
+        });
+        this.updateCurrentStep();
+      },
+      complete: () => {
+        wx.hideLoading();
+      }
+    });
   },
 
   // 切换用户同意状态
@@ -17,21 +76,88 @@ Page({
     this.setData({
       hasUserAgreed: !this.data.hasUserAgreed
     });
+    this.updateCurrentStep();
+  },
+
+  // 用户选择头像
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    this.setData({
+      avatarUrl,
+    });
+    wx.showToast({
+      title: '头像已选择',
+      icon: 'success',
+      duration: 1500
+    });
+    this.updateCurrentStep();
+  },
+
+  // 用户输入昵称
+  onInputNickname(e) {
+    const nickName = e.detail.value;
+    this.setData({
+      nickName
+    });
+    this.updateCurrentStep();
+  },
+
+  // 更新当前步骤
+  updateCurrentStep() {
+    // 如果是已注册用户且显示简化登录，直接设置为步骤3
+    if (this.data.isRegistered && this.data.showSimpleLogin) {
+      this.setData({
+        currentStep: 3
+      });
+      return;
+    }
+
+    let step = 1;
+    if (this.data.avatarUrl && this.data.avatarUrl !== '/images/tabbar/my.png' && this.data.nickName) {
+      step = 2;
+      if (this.data.hasUserAgreed) {
+        step = 3;
+      }
+    }
+    this.setData({
+      currentStep: step
+    });
+  },
+
+  // 检查是否可以登录
+  canLogin() {
+    // 已注册用户且显示简化登录界面时，始终返回true
+    if (this.data.isRegistered && this.data.showSimpleLogin) {
+      return true;
+    }
+    
+    return this.data.hasUserAgreed && 
+           this.data.avatarUrl && 
+           this.data.avatarUrl !== '/images/tabbar/my.png' && 
+           this.data.nickName;
   },
 
   // 用户登录
   login: function() {
-    // 检查用户是否同意授权
-    if (!this.data.hasUserAgreed) {
+    // 检查是否可以登录
+    if (!this.canLogin()) {
+      let message = '';
+      if (!this.data.avatarUrl || this.data.avatarUrl === '/images/tabbar/my.png') {
+        message = '请先选择头像';
+      } else if (!this.data.nickName) {
+        message = '请输入昵称';
+      } else if (!this.data.hasUserAgreed) {
+        message = '请先同意授权';
+      }
+      
       wx.showToast({
-        title: '请先同意授权获取头像和昵称',
+        title: message,
         icon: 'none',
         duration: 2000
       });
       return;
     }
 
-    const that = this;
     if (this.data.isLoading) return;
     
     // 设置加载状态
@@ -43,87 +169,74 @@ Page({
       mask: true
     });
 
-    // 先获取用户信息
-    wx.getUserProfile({
-      desc: '用于完善会员资料', // 简短而描述准确的提示
-      success: (userRes) => {
-        console.log('获取用户信息成功', userRes);
-        const userInfo = userRes.userInfo;
+    // 准备用户信息
+    const userInfo = {
+      nickName: this.data.nickName,
+      avatarUrl: this.data.avatarUrl
+    };
         
-        // 调用云函数进行登录，并传递用户信息
-        wx.cloud.callFunction({
-          name: 'login',
-          data: {
-            userInfo: userInfo
-          },
-          success: res => {
-            console.log('[云函数] [login] 调用成功', res);
-            // 添加更多详细日志
-            console.log('返回结果详情:', JSON.stringify(res.result));
-            
-            if (res.result && res.result.code === 0) {
-              const { openid, role, remainingUsage, nickName, avatarUrl } = res.result;
-              
-              console.log('登录成功，用户角色:', role, '剩余使用次数:', remainingUsage);
-              
-              // 更新全局数据
-              const app = getApp();
-              app.globalData.userInfo = {
-                openid: openid,
-                role: role || 'beautician', // 默认为美容师角色
-                nickName: nickName,
-                avatarUrl: avatarUrl
-              };
-              app.globalData.isLoggedIn = true;
-              app.globalData.role = role || 'beautician';
-              app.globalData.remainingUsage = remainingUsage || 0;
-
-              // 保存到本地
-              wx.setStorageSync('userInfo', app.globalData.userInfo);
-
-              // 显示成功提示
-              wx.showToast({
-                title: '登录成功',
-                icon: 'success',
-                duration: 1500
-              });
-
-              // 延迟跳转，让用户看到成功提示
-              setTimeout(() => {
-                this.redirectToIndex();
-              }, 1500);
-            } else {
-              // 登录失败处理
-              const errMsg = res.result ? res.result.msg : '登录失败，请重试';
-              console.error('登录失败:', errMsg);
-              wx.showToast({
-                title: errMsg,
-                icon: 'none',
-                duration: 2000
-              });
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [login] 调用失败', err);
-            wx.showToast({
-              title: '登录失败: ' + (err.errMsg || '请重试'),
-              icon: 'none',
-              duration: 2000
-            });
-          },
-          complete: () => {
-            this.setData({ isLoading: false });
-            wx.hideLoading();
-          }
-        });
+    // 调用云函数进行登录，并传递用户信息
+    wx.cloud.callFunction({
+      name: 'login',
+      data: {
+        userInfo: userInfo
       },
-      fail: (err) => {
-        console.error('获取用户信息失败', err);
+      success: res => {
+        console.log('[云函数] [login] 调用成功', res);
+        // 添加更多详细日志
+        console.log('返回结果详情:', JSON.stringify(res.result));
+        
+        if (res.result && res.result.code === 0) {
+          const { openid, role, remainingUsage, nickName, avatarUrl } = res.result;
+          
+          console.log('登录成功，用户角色:', role, '剩余使用次数:', remainingUsage);
+          
+          // 更新全局数据
+          const app = getApp();
+          app.globalData.userInfo = {
+            openid: openid,
+            role: role || 'beautician', // 默认为美容师角色
+            nickName: nickName,
+            avatarUrl: avatarUrl
+          };
+          app.globalData.isLoggedIn = true;
+          app.globalData.role = role || 'beautician';
+          app.globalData.remainingUsage = remainingUsage || 0;
+
+          // 保存到本地
+          wx.setStorageSync('userInfo', app.globalData.userInfo);
+
+          // 显示成功提示
+          wx.showToast({
+            title: '登录成功',
+            icon: 'success',
+            duration: 1500
+          });
+
+          // 延迟跳转，让用户看到成功提示
+          setTimeout(() => {
+            this.redirectToIndex();
+          }, 1500);
+        } else {
+          // 登录失败处理
+          const errMsg = res.result ? res.result.msg : '登录失败，请重试';
+          console.error('登录失败:', errMsg);
+          wx.showToast({
+            title: errMsg,
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [login] 调用失败', err);
         wx.showToast({
-          title: '获取用户信息失败: ' + (err.errMsg || '请允许授权'),
+          title: '登录失败: ' + (err.errMsg || '请重试'),
           icon: 'none',
           duration: 2000
         });
+      },
+      complete: () => {
         this.setData({ isLoading: false });
         wx.hideLoading();
       }

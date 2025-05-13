@@ -3,7 +3,9 @@ Page({
     role: 'beautician',
     remainingUsage: 0,
     createTimeFormatted: '',
-    createTime: null
+    createTime: null,
+    avatarUrl: '',
+    nickName: ''
   },
 
   onLoad: function(options) {
@@ -11,6 +13,13 @@ Page({
   },
 
   onShow: function() {
+    // 设置自定义tabBar的选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 1
+      });
+    }
+    
     this.getUserInfo();
   },
 
@@ -18,10 +27,19 @@ Page({
   getUserInfo: function() {
     const app = getApp();
     
-    // 从全局数据中获取基本信息
+    // 先从全局数据中获取基本信息
+    const userInfo = app.globalData.userInfo || {};
     this.setData({
       role: app.globalData.role || 'beautician',
-      remainingUsage: app.globalData.remainingUsage || 0
+      remainingUsage: app.globalData.remainingUsage || 0,
+      avatarUrl: userInfo.avatarUrl || '',
+      nickName: userInfo.nickName || ''
+    });
+    
+    // 显示加载中
+    wx.showLoading({
+      title: '加载中...',
+      mask: false
     });
 
     // 从数据库获取完整用户信息
@@ -44,16 +62,46 @@ Page({
             createTimeFormatted: createTimeFormatted,
             createTime: userData.createdAt,
             role: userData.role || 'beautician',
-            remainingUsage: userData.remainingUsage || 0
+            remainingUsage: userData.remainingUsage || 0,
+            avatarUrl: userData.avatarUrl || '',
+            nickName: userData.nickName || ''
           });
           
           // 更新全局数据
           app.globalData.role = userData.role || 'beautician';
           app.globalData.remainingUsage = userData.remainingUsage || 0;
+          if (app.globalData.userInfo) {
+            app.globalData.userInfo.nickName = userData.nickName || '';
+            app.globalData.userInfo.avatarUrl = userData.avatarUrl || '';
+            // 更新本地存储
+            wx.setStorageSync('userInfo', app.globalData.userInfo);
+          }
+          console.log('个人中心页面更新用户信息:', userData);
         }
       },
       fail: err => {
         console.error('[云函数] [getUser] 调用失败', err);
+      },
+      complete: () => {
+        wx.hideLoading();
+      }
+    });
+  },
+
+  // 导航到个人资料编辑页面
+  navigateToProfile: function() {
+    console.log('正在跳转到个人资料编辑页面...');
+    wx.navigateTo({
+      url: '/pages/profile/profile',
+      success: () => {
+        console.log('跳转个人资料编辑页面成功');
+      },
+      fail: (err) => {
+        console.error('跳转个人资料编辑页面失败:', err);
+        wx.showToast({
+          title: '页面跳转失败：' + err.errMsg,
+          icon: 'none'
+        });
       }
     });
   },

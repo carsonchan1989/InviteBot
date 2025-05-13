@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="header">
+    <view class="title">编辑用户</view>
+  </view>
+
+  <view class="form-container" wx:if="{{!loading}}">
+    <view class="form-item">
+      <view class="form-label">用户名称</view>
+      <input class="form-input" value="{{userData.nickName}}" placeholder="未设置名称" disabled="true" />
+    </view>
+    
+    <view class="form-item">
+      <view class="form-label">用户角色</view>
+      <picker bindchange="onRoleChange" value="{{userData.role}}" range="{{['管理员', '美容师']}}" range-key="">
+        <view class="form-input picker">
+          {{userData.role === 'admin' ? '管理员' : '美容师'}}
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    
+    <view class="form-item">
+      <view class="form-label">剩余次数</view>
+      <input class="form-input" type="number" value="{{userData.remainingUsage}}" bindinput="onRemainingUsageChange" placeholder="0" />
+    </view>
+    
+    <view class="form-item">
+      <view class="form-label">注册时间</view>
+      <input class="form-input" value="{{userData.createTime}}" disabled="true" />
+    </view>
+    
+    <view class="btn-group">
+      <button class="save-btn" bindtap="saveUser">保存</button>
+      <button class="cancel-btn" bindtap="cancelEdit">取消</button>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

@@ -55,8 +55,13 @@ exports.main = async (event, context) => {
       case 'getUsers':
         const { page, pageSize, searchValue, sortBy, sortOrder, filterRole } = event;
         return await getUsers(page, pageSize, searchValue, sortBy, sortOrder, filterRole);
+      case 'getUsersWithHistory':
+        const params = event;
+        return await getUsersWithHistory(params.page, params.pageSize, params.searchValue, params.sortBy, params.sortOrder, params.filterRole);
       case 'getUser':
         return await getUser(userId);
+      case 'getUserById':
+        return await getUserById(userId);
       case 'addUser':
         return await addUser(data);
       case 'updateUser':
@@ -188,6 +193,53 @@ async function getUsers(page = 1, pageSize = 10, searchValue = '', sortBy = 'cre
   }
 }
 
+// 获取用户列表并包含历史使用记录
+async function getUsersWithHistory(page = 1, pageSize = 10, searchValue = '', sortBy = 'createdAt', sortOrder = 'desc', filterRole = '') {
+  try {
+    // 先获取用户列表，与普通用户查询相同
+    const userResult = await getUsers(page, pageSize, searchValue, sortBy, sortOrder, filterRole);
+    
+    if (userResult.code !== 0 || !userResult.data || !userResult.data.users) {
+      return userResult;
+    }
+    
+    // 获取历史记录集合
+    const historiesCollection = db.collection('histories');
+    
+    // 处理每个用户，计算真实使用次数
+    const users = userResult.data.users;
+    const processedUsers = [];
+    
+    for (const user of users) {
+      // 查询该用户的历史记录数量
+      const historyCount = await historiesCollection.where({
+        userId: user._id
+      }).count();
+      
+      // 真实的已使用次数就是历史记录数量
+      const realUsedCount = historyCount.total || 0;
+      
+      // 传递经过修正的用户数据
+      processedUsers.push({
+        ...user,
+        usedUsage: realUsedCount, // 设置真实使用次数
+        totalHistories: realUsedCount // 保存历史记录总数
+      });
+    }
+    
+    // 用处理后的用户数据替换原数据
+    userResult.data.users = processedUsers;
+    
+    return userResult;
+  } catch (error) {
+    console.error('获取带历史记录的用户列表失败:', error);
+    return {
+      code: -1,
+      msg: '获取用户列表失败: ' + error.message
+    };
+  }
+}
+
 // 更新用户信息
 async function updateUser(userId, data) {
   try {
@@ -274,6 +326,34 @@ async function addUsageCount(userId, count) {
     return {
       code: -1,
       msg: '增加使用次数失败',
+      error: error
+    };
+  }
+}
+
+// 根据ID获取用户详情
+async function getUserById(userId) {
+  try {
+    // 根据ID查询用户
+    const userResult = await usersCollection.doc(userId).get();
+    
+    if (userResult.data) {
+      return {
+        code: 0,
+        msg: '获取用户详情成功',
+        data: userResult.data
+      };
+    } else {
+      return {
+        code: -1,
+        msg: '用户不存在'
+      };
+    }
+  } catch (error) {
+    console.error('获取用户详情失败:', error);
+    return {
+      code: -1,
+      msg: '获取用户详情失败',
       error: error
     };
   }

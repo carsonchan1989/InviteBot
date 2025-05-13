@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="header">
+    <view class="title">编辑个人资料</view>
+    <view class="subtitle">修改您的头像和昵称</view>
+  </view>
+
+  <view class="profile-container">
+    <view class="avatar-section">
+      <view class="section-title">头像</view>
+      <view class="avatar-wrapper">
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-image" src="{{tempAvatarUrl || avatarUrl}}" mode="aspectFill"></image>
+        </button>
+        <view class="avatar-tip">点击头像进行更换</view>
+      </view>
+    </view>
+
+    <view class="nickname-section">
+      <view class="section-title">昵称</view>
+      <view class="nickname-wrapper">
+        <input type="nickname" class="nickname-input" placeholder="点击输入昵称" bindinput="onInputNickname" value="{{tempNickname || nickName}}" />
+        <view class="nickname-tip">支持使用微信昵称或自定义昵称</view>
+      </view>
+    </view>
+
+    <view class="action-buttons">
+      <button class="cancel-btn" bindtap="cancel">取消</button>
+      <button class="save-btn" bindtap="saveProfile">保存</button>
+    </view>
+  </view>
+</view> 

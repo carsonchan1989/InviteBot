@@ -1,11 +1,11 @@
 <view class="container">
   <view class="header">
     <view class="title">话术生成结果</view>
-    <view class="back" bindtap="backToIndex">返回</view>
+    <button class="back-btn" size="mini" bindtap="backToIndex">返回</button>
   </view>
 
-  <view class="invite-info" wx:if="{{inviteInfo}}">
-    <view class="info-title">邀约信息</view>
+  <view class="card invite-info" wx:if="{{inviteInfo}}">
+    <view class="card-title">邀约信息</view>
     <view class="info-item">
       <text class="label">邀约对象:</text>
       <text class="value">{{inviteInfo.inviteTarget}}</text>
@@ -19,7 +19,7 @@
       <text class="value">{{inviteInfo.inviteReason}}</text>
     </view>
     <view class="info-item">
-      <text class="label">邀约项目1:</text>
+      <text class="label">邀约项目:</text>
       <text class="value">{{inviteInfo.inviteProject}}</text>
     </view>
     <view class="info-item" wx:if="{{inviteInfo.inviteProject2}}">
@@ -32,8 +32,8 @@
     </view>
   </view>
 
-  <view class="tips">
-    <view class="tips-title">提示信息</view>
+  <view class="card tips">
+    <view class="card-title">提示信息</view>
     <view class="tips-content">请根据实际情况选择合适的话术，长按文字可复制。</view>
   </view>
 

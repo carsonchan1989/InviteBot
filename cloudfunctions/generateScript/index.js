@@ -360,24 +360,7 @@ async function generateByAI(inviteInfo, taskId) {
 3.你可以根据情况编写不同切入角度的邀约话术，邀约客户到店.
 4.你对邀约客户有着深刻的人性洞察与理解.
 
-### 要求
-1.根据客户输入的内容，生成邀约客户的话术，每条话术内容在100字左右;
-2.内容口语化，风趣幽默，有emoji表情;
-3.邀约项目和时间用""明确标识出来，并且不能改动项目名称
-4.如果有多个项目，项目名称之间用"+"号连接
-5.对客户的称呼不能更改，直接用${inviteInfo.inviteTarget}
-6.话术生成角度如下：(1)太久没来的角度;(2)项目护理周期的角度;(3)享受的角度;(4)皮肤护理需要的角度;(5)身体养生需要的角度;(6)节气对人的影响的角度;(7)近期天气对人的影响的角度;(8)从众心理的角度.
-7.话术生成请按以上角度顺序以及按格式生成
-
-### 格式
-1.time：
-2.period：
-3.enjoy：
-4.skin：
-5.body：
-6.jieqi：
-7.weather：
-8.people：
+### 要求1.根据客户输入的内容，生成邀约客户的话术，每条话术内容在100字左右;2.内容口语化，风趣幽默，有emoji表情;3.邀约项目和时间用""明确标识出来，并且不能改动项目名称4.如果有多个项目，项目名称之间用"+"号连接5.对客户的称呼不能更改，直接用${inviteInfo.inviteTarget}6.话术生成角度如下：(1)太久没来的角度;(2)项目护理周期的角度;(3)享受的角度.7.话术生成请按以上角度顺序以及按格式生成### 格式1.time：2.period：3.enjoy：
 
 ### 客户信息
 - 客户称呼：${inviteInfo.inviteTarget}
@@ -390,15 +373,10 @@ ${projectsText}
 2.不要强调送东西
 3.不要说名额有限等内容
 
-请严格按照要求的格式直接生成8个不同角度的话术，不要有多余的解释或前言。回复格式必须是：
+请严格按照要求的格式直接生成3个不同角度的话术，不要有多余的解释或前言。回复格式必须是：
 1.time：话术内容
 2.period：话术内容
-3.enjoy：话术内容
-4.skin：话术内容
-5.body：话术内容
-6.jieqi：话术内容
-7.weather：话术内容
-8.people：话术内容`;
+3.enjoy：话术内容`;
 
     console.log('使用的提示词:', prompt);
 
@@ -471,25 +449,19 @@ ${projectsText}
       const content = response.data.choices[0].message.content;
       console.log('API返回原始内容:', content);
       
-      // 解析8个话术角度的内容
+      // 解析3个话术角度的内容
       const timeMatch = content.match(/1\.time：([\s\S]*?)(?=2\.period：|$)/);
       const periodMatch = content.match(/2\.period：([\s\S]*?)(?=3\.enjoy：|$)/);
-      const enjoyMatch = content.match(/3\.enjoy：([\s\S]*?)(?=4\.skin：|$)/);
-      const skinMatch = content.match(/4\.skin：([\s\S]*?)(?=5\.body：|$)/);
-      const bodyMatch = content.match(/5\.body：([\s\S]*?)(?=6\.jieqi：|$)/);
-      const jieqiMatch = content.match(/6\.jieqi：([\s\S]*?)(?=7\.weather：|$)/);
-      const weatherMatch = content.match(/7\.weather：([\s\S]*?)(?=8\.people：|$)/);
-      const peopleMatch = content.match(/8\.people：([\s\S]*?)(?=$)/);
+      const enjoyMatch = content.match(/3\.enjoy：([\s\S]*?)(?=4\.|\n\n|$)/);
       
-      // 检查是否成功解析了全部8个话术
+      // 检查是否成功解析了全部3个话术
       const allMatches = [
-        timeMatch, periodMatch, enjoyMatch, skinMatch, 
-        bodyMatch, jieqiMatch, weatherMatch, peopleMatch
+        timeMatch, periodMatch, enjoyMatch
       ];
       
       // 记录每个匹配的结果，帮助调试
       console.log('匹配结果:', allMatches.map((match, index) => {
-        const key = ['time', 'period', 'enjoy', 'skin', 'body', 'jieqi', 'weather', 'people'][index];
+        const key = ['time', 'period', 'enjoy'][index];
         return {
           key,
           matched: match ? true : false,
@@ -499,29 +471,24 @@ ${projectsText}
       
       if (allMatches.every(match => match && match[1] && match[1].trim().length > 0)) {
         isModelGenerated = true;
-        console.log('成功解析全部8个话术，使用大模型生成结果');
+        console.log('成功解析全部3个话术，使用大模型生成结果');
 
         // 添加到结果数组中
         scripts = [
           { reason: '太久没来', key: 'time', content: timeMatch[1].trim(), isAIGenerated: true },
           { reason: '护理周期', key: 'period', content: periodMatch[1].trim(), isAIGenerated: true },
-          { reason: '享受角度', key: 'enjoy', content: enjoyMatch[1].trim(), isAIGenerated: true },
-          { reason: '皮肤护理', key: 'skin', content: skinMatch[1].trim(), isAIGenerated: true },
-          { reason: '身体养生', key: 'body', content: bodyMatch[1].trim(), isAIGenerated: true },
-          { reason: '节气影响', key: 'jieqi', content: jieqiMatch[1].trim(), isAIGenerated: true },
-          { reason: '天气影响', key: 'weather', content: weatherMatch[1].trim(), isAIGenerated: true },
-          { reason: '从众心理', key: 'people', content: peopleMatch[1].trim(), isAIGenerated: true }
+          { reason: '享受角度', key: 'enjoy', content: enjoyMatch[1].trim(), isAIGenerated: true }
         ];
       } else {
-        console.error('未能成功解析全部8个话术，API返回的内容格式可能不符合预期');
+        console.error('未能成功解析全部3个话术，API返回的内容格式可能不符合预期');
         console.error('解析结果:', JSON.stringify(allMatches.map(m => m ? true : false)));
         
         // 尝试拼接部分成功的内容
         const partialScripts = [];
         for (let i = 0; i < allMatches.length; i++) {
           const match = allMatches[i];
-          const key = ['time', 'period', 'enjoy', 'skin', 'body', 'jieqi', 'weather', 'people'][i];
-          const reason = ['太久没来', '护理周期', '享受角度', '皮肤护理', '身体养生', '节气影响', '天气影响', '从众心理'][i];
+          const key = ['time', 'period', 'enjoy'][i];
+          const reason = ['太久没来', '护理周期', '享受角度'][i];
           
           if (match && match[1] && match[1].trim().length > 0) {
             partialScripts.push({

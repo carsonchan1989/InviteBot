@@ -46,9 +46,9 @@
         <input class="form-item__input" name="inviteProject3" placeholder="请输入邀约项目名称（选填）" value="{{formData.inviteProject3}}"/>
       </view>
 
-      <!-- 按钮 -->
-      <view class="btn-group">
-        <button class="primary-btn" form-type="submit">生成话术(等待60秒)</button>
+      <!-- 按钮区域 -->
+      <view class="action-section">
+        <button class="primary-btn" form-type="submit">生成话术<text class="wait-text">等待60秒</text></button>
         <button class="secondary-btn" bindtap="resetForm">清空</button>
       </view>
     </form>
