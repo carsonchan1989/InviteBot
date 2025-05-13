@@ -1,0 +1,48 @@
+1. 项目结构保持清晰：
+- miniprogram/
+  - pages/
+    - index/ (邀约信息输入页)
+    - result/ (话术生成结果页)
+    - login/ (登录页)
+    - admin/ (管理员后台)
+  - components/ (公共组件)
+  - utils/ (工具函数)
+  - services/ (API服务)
+  - styles/ (公共样式)
+  - app.js
+  - app.json
+  - app.wxss
+- cloudfunctions/
+  - login/
+  - generateScript/
+  - manageUsers/
+  - manageProjects/
+
+2. 命名规范：
+- 文件夹和文件名使用小写+连字符(kebab-case)
+- JS变量和函数使用驼峰命名(camelCase)
+- 组件使用大驼峰命名(PascalCase)
+
+3. 组件化开发：
+- 将重复使用的UI元素抽离为组件
+- 页面布局使用Flex布局保持响应性
+
+4. 代码风格：
+- 使用async/await处理异步操作
+- 注释关键业务逻辑
+- 将业务逻辑与UI分离
+
+5. 安全性：
+- 敏感数据不直接存储在本地
+- API调用必须进行合法性验证
+- 用户权限检查在前端和后端双重验证
+
+6. 云函数开发：
+- 单一职责原则，一个云函数专注于一个功能
+- 错误处理标准化
+- 统一返回格式{code, msg, data}
+
+7. 数据库操作：
+- 使用索引提高查询效率
+- 分页获取数据
+- 定期清理无用数据 

@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="header">
+    <view class="logo-container">
+      <view class="logo-placeholder"></view>
+    </view>
+    <view class="title">美容师邀约话术生成器</view>
+    <view class="subtitle">提升邀约效率，打造专业形象</view>
+  </view>
+
+  <view class="login-container">
+    <view class="login-tip">请使用微信账号登录</view>
+    
+    <view class="auth-agreement">
+      <view class="checkbox {{hasUserAgreed ? 'checked' : ''}}" bindtap="toggleAgreement">
+        <view class="checkbox-inner" wx:if="{{hasUserAgreed}}"></view>
+      </view>
+      <view class="agreement-text" bindtap="toggleAgreement">我同意授权获取头像和昵称</view>
+    </view>
+    
+    <button class="login-btn {{!hasUserAgreed ? 'disabled' : ''}}" bindtap="login">微信一键登录</button>
+    
+    <view class="auth-tip">登录时请在弹出的对话框中点击"允许"</view>
+    
+    <view class="privacy-policy">
+      登录即表示您已同意
+      <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+      和
+      <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+    </view>
+  </view>
+</view> 

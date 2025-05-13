@@ -1,0 +1,144 @@
+/**app.wxss**/
+page {
+  background-color: #f6f6f6;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 20rpx;
+}
+
+/* 主色调按钮样式 */
+.primary-btn {
+  width: 90%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 10rpx;
+  background-color: #7B55D0;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  text-align: center;
+  margin: 30rpx auto;
+}
+
+/* 次要按钮样式 */
+.secondary-btn {
+  width: 90%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 10rpx;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 32rpx;
+  font-weight: 500;
+  text-align: center;
+  margin: 30rpx auto;
+}
+
+/* 危险按钮样式 */
+.danger-btn {
+  width: 90%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 10rpx;
+  background-color: #e64340;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  text-align: center;
+  margin: 30rpx auto;
+}
+
+/* 表单容器 */
+.form-container {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-top: 30rpx;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* 表单项 */
+.form-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30rpx;
+}
+
+.form-item__label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+}
+
+.form-item__input {
+  border: 1px solid #e6e6e6;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+/* 通用外边距 */
+.mt-10 {
+  margin-top: 20rpx;
+}
+
+.mb-10 {
+  margin-bottom: 20rpx;
+}
+
+.ml-10 {
+  margin-left: 20rpx;
+}
+
+.mr-10 {
+  margin-right: 20rpx;
+}
+
+/* 通用字体样式 */
+.text-primary {
+  color: #7B55D0;
+}
+
+.text-secondary {
+  color: #666;
+}
+
+.text-small {
+  font-size: 24rpx;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: bold;
+}

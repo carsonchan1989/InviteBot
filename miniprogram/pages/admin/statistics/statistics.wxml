@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="header">
+    <view class="title">使用统计</view>
+  </view>
+
+  <view class="stats-container" wx:if="{{!loading}}">
+    <view class="stats-card">
+      <view class="stats-value">{{totalUsers}}</view>
+      <view class="stats-label">总用户数</view>
+    </view>
+    
+    <view class="stats-card">
+      <view class="stats-value">{{activeUsers}}</view>
+      <view class="stats-label">活跃用户</view>
+    </view>
+    
+    <view class="stats-card">
+      <view class="stats-value">{{totalGenerated}}</view>
+      <view class="stats-label">总生成次数</view>
+    </view>
+  </view>
+  
+  <!-- 加载提示 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

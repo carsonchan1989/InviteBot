@@ -1,0 +1,102 @@
+<view class="container">
+  <view class="header">
+    <view class="title">话术生成结果</view>
+    <view class="back" bindtap="backToIndex">返回</view>
+  </view>
+
+  <view class="invite-info" wx:if="{{inviteInfo}}">
+    <view class="info-title">邀约信息</view>
+    <view class="info-item">
+      <text class="label">邀约对象:</text>
+      <text class="value">{{inviteInfo.inviteTarget}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">邀约日期:</text>
+      <text class="value">{{inviteInfo.inviteDate}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">邀约理由:</text>
+      <text class="value">{{inviteInfo.inviteReason}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">邀约项目1:</text>
+      <text class="value">{{inviteInfo.inviteProject}}</text>
+    </view>
+    <view class="info-item" wx:if="{{inviteInfo.inviteProject2}}">
+      <text class="label">邀约项目2:</text>
+      <text class="value">{{inviteInfo.inviteProject2}}</text>
+    </view>
+    <view class="info-item" wx:if="{{inviteInfo.inviteProject3}}">
+      <text class="label">邀约项目3:</text>
+      <text class="value">{{inviteInfo.inviteProject3}}</text>
+    </view>
+  </view>
+
+  <view class="tips">
+    <view class="tips-title">提示信息</view>
+    <view class="tips-content">请根据实际情况选择合适的话术，长按文字可复制。</view>
+  </view>
+
+  <view class="scripts-container">
+    <block wx:if="{{scriptList.length > 0}}">
+      <block wx:for="{{scriptList}}" wx:key="key">
+        <view class="script-card">
+          <view class="script-title">{{item.reason}}</view>
+          <view class="script-content" bindlongpress="copyText" data-text="{{item.content}}">{{item.content}}</view>
+          <view class="copy-btn" bindtap="copyText" data-text="{{item.content}}">复制</view>
+        </view>
+      </block>
+    </block>
+    <block wx:else>
+      <view class="empty-data">
+        <view wx:if="{{isPolling}}" class="loading-text">正在生成话术，请耐心等待60秒...</view>
+        <view wx:else class="empty-text">暂无数据，请点击下方按钮重新生成</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 宣传部分 -->
+  <view class="promo-section">
+    <view class="qrcode-container">
+      <image class="qrcode" src="../../images/a1d72d522d9264c6b7f652dd7531708.png" mode="aspectFit"></image>
+      <view class="qrcode-text">
+        <text class="blue-text">↓美业智能体个性化工具定制↓</text>
+        <text class="blue-text">↓打造你听话照做的智能店长↓</text>
+        <text class="blue-text">↓更多赚本增效智能体工具↓</text>
+        <text class="blue-text">Tel: 181-2682-2250</text>
+      </view>
+    </view>
+    
+    <view class="slogan-container">
+      <view class="slogan-line">
+        <text class="slogan-prefix">智能体没有</text>
+        <text class="slogan-highlight">不会</text>
+        <text class="slogan-suffix">，只有</text>
+        <text class="slogan-bold">好的</text>
+      </view>
+      <view class="slogan-line">
+        <text class="slogan-prefix">智能体没有</text>
+        <text class="slogan-highlight">休息</text>
+        <text class="slogan-suffix">，只有</text>
+        <text class="slogan-bold">执行</text>
+      </view>
+      <view class="slogan-line">
+        <text class="slogan-prefix">智能体没有</text>
+        <text class="slogan-highlight">抱怨</text>
+        <text class="slogan-suffix">，只有</text>
+        <text class="slogan-bold">结果</text>
+      </view>
+      <view class="slogan-line">
+        <text class="slogan-prefix">智能体没有</text>
+        <text class="slogan-highlight">薪酬</text>
+        <text class="slogan-suffix">，只有</text>
+        <text class="slogan-bold">收获</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-buttons">
+    <button class="primary-btn" bindtap="backToIndex">返回修改</button>
+    <button class="secondary-btn" bindtap="regenerate">重新生成</button>
+  </view>
+</view> 

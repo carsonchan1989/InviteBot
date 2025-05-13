@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/result/result",
+    "pages/admin/admin",
+    "pages/admin/users/users",
+    "pages/admin/projects/projects",
+    "pages/admin/statistics/statistics",
+    "pages/admin/invitation-codes/invitation-codes",
+    "pages/user/redeem-code/redeem-code",
+    "pages/history/history",
+    "pages/chatBot/chatBot",
+    "pages/foodBuy/foodBuy",
+    "pages/my/my"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#7B55D0",
+    "navigationBarTitleText": "美容师邀约话术生成器",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#7B55D0",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "邀约生成"
+      },
+      {
+        "pagePath": "pages/admin/admin",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {},
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

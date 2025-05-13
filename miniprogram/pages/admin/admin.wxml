@@ -1,0 +1,108 @@
+<view class="container">
+  <view class="header">
+    <view class="avatar-container">
+      <view class="avatar-placeholder"></view>
+      <view class="user-info">
+        <view class="nickname">{{role === 'admin' ? '管理员' : '美容师'}}</view>
+        <view class="usage">剩余使用次数：{{remainingUsage}} 次</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">
+      <text class="title-text">个人信息</text>
+    </view>
+    <view class="menu-list">
+      <view class="menu-item">
+        <view class="menu-item__label">角色</view>
+        <view class="menu-item__value">{{role === 'admin' ? '管理员' : '美容师'}}</view>
+      </view>
+      <view class="menu-item">
+        <view class="menu-item__label">注册时间</view>
+        <view class="menu-item__value">{{createTimeFormatted}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{role === 'admin'}}">
+    <view class="section-title">
+      <text class="title-text">管理功能</text>
+    </view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="navigateToUserManage">
+        <view class="menu-item__left">
+          <view class="menu-item__label">用户管理</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="navigateToProjectManage">
+        <view class="menu-item__left">
+          <view class="menu-item__label">项目管理</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="navigateToUsageStats">
+        <view class="menu-item__left">
+          <view class="menu-item__label">使用统计</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="navigateToInvitationCodes">
+        <view class="menu-item__left">
+          <view class="menu-item__label">邀请码管理</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">
+      <text class="title-text">历史记录</text>
+    </view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="navigateToHistory">
+        <view class="menu-item__left">
+          <view class="menu-item__label">生成历史</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">
+      <text class="title-text">系统</text>
+    </view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="contactAdmin" wx:if="{{role !== 'admin'}}">
+        <view class="menu-item__left">
+          <view class="menu-item__label">联系管理员</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="navigateToRedeemCode">
+        <view class="menu-item__left">
+          <view class="menu-item__label">兑换邀请码</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="showAbout">
+        <view class="menu-item__left">
+          <view class="menu-item__label">关于我们</view>
+        </view>
+        <view class="menu-item__arrow">></view>
+      </view>
+      <view class="menu-item" bindtap="logout">
+        <view class="menu-item__left">
+          <view class="menu-item__label logout">退出登录</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="footer">
+    <text class="footer-text">美容师邀约话术生成器 v1.0</text>
+  </view>
+</view> 

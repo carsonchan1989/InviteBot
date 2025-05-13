@@ -1,0 +1,262 @@
+/* pages/result/result.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f6f6f6;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.back {
+  font-size: 28rpx;
+  color: #ff6b81;
+}
+
+.tips {
+  background: #fff7f8;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+  border-left: 8rpx solid #ff6b81;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+
+.tips-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.scripts-container {
+  margin-bottom: 40rpx;
+}
+
+.script-card {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.script-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ff6b81;
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.script-content {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 16rpx;
+  padding-right: 60rpx;
+  word-break: break-all;
+}
+
+.copy-btn {
+  position: absolute;
+  right: 20rpx;
+  bottom: 20rpx;
+  background: #ff6b81;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 30rpx;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.primary-btn, .secondary-btn {
+  width: 45%;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  padding: 16rpx 0;
+}
+
+.primary-btn {
+  background: #ff6b81;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #fff;
+  color: #ff6b81;
+  border: 1rpx solid #ff6b81;
+}
+
+/* 添加空数据提示的样式 */
+.empty-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.loading-text, .empty-text {
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.loading-text {
+  color: #007aff;
+}
+
+/* 添加邀约信息样式 */
+.invite-info {
+  width: 100%;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.info-item .label {
+  flex: 0 0 80px;
+  color: #666;
+}
+
+.info-item .value {
+  flex: 1;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 宣传部分样式 */
+.promo-section {
+  margin-top: 50rpx;
+  margin-bottom: 50rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  width: calc(100% - 60rpx);
+}
+
+.qrcode-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50rpx;
+  width: 100%;
+  padding: 0 10rpx;
+}
+
+.qrcode {
+  width: 220rpx;
+  height: 220rpx;
+  flex-shrink: 0;
+}
+
+.qrcode-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 62%;
+}
+
+.blue-text {
+  color: #0066cc;
+  font-size: 27rpx;
+  line-height: 1.8;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.5rpx;
+}
+
+.slogan-container {
+  margin-top: 20rpx;
+  width: 100%;
+  padding: 0 10rpx;
+}
+
+.slogan-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+  font-size: 34rpx;
+  line-height: 2;
+}
+
+.slogan-prefix {
+  color: #999;
+  text-align: right;
+  flex: 1;
+  padding-right: 0;
+  font-weight: 500;
+}
+
+.slogan-highlight {
+  color: #f7cf6d;
+  margin: 0 6rpx;
+  font-weight: 500;
+}
+
+.slogan-suffix {
+  color: #999;
+  margin-right: 6rpx;
+  font-weight: 500;
+}
+
+.slogan-bold {
+  color: #333;
+  font-weight: bold;
+  flex: 1;
+  text-align: left;
+  padding-left: 0;
+} 

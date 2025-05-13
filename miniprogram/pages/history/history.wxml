@@ -1,0 +1,74 @@
+<view class="container">
+  <view class="header">
+    <view class="title-wrapper">
+      <text class="title">生成历史</text>
+      <text class="sub-title">记录您的创作足迹</text>
+    </view>
+    <view class="stat-badge">
+      <text class="stat-number">{{totalCount}}</text>
+      <text class="stat-label">已生成</text>
+    </view>
+  </view>
+
+  <view class="history-list">
+    <block wx:if="{{historyList.length > 0}}">
+      <view class="history-item" wx:for="{{historyList}}" wx:key="_id" bindtap="viewDetail" data-index="{{index}}" hover-class="item-hover">
+        <view class="item-header">
+          <view class="item-time">
+            <text class="time-icon"></text>
+            <text>{{item.formattedTime}}</text>
+          </view>
+          <view class="item-user" wx:if="{{isAdmin}}">
+            <text class="user-icon"></text>
+            <text>{{item.userName || '未知用户'}}</text>
+          </view>
+        </view>
+        <view class="item-content">
+          <view class="content-row">
+            <view class="label">邀约对象:</view>
+            <view class="value">{{item.inviteInfo.inviteTarget}}</view>
+          </view>
+          <view class="content-row">
+            <view class="label">邀约日期:</view>
+            <view class="value">{{item.inviteInfo.inviteDate}}</view>
+          </view>
+          <view class="content-row">
+            <view class="label">邀约理由:</view>
+            <view class="value">{{item.inviteInfo.inviteReason}}</view>
+          </view>
+          <view class="content-row">
+            <view class="label">邀约项目:</view>
+            <view class="value">{{item.inviteInfo.inviteProject}}</view>
+          </view>
+        </view>
+        <view class="item-action">
+          <view class="script-count">
+            <text class="count-icon"></text>
+            <text>{{item.scripts.length}}个话术</text>
+          </view>
+          <view class="view-btn">
+            <text class="btn-text">查看详情</text>
+            <text class="btn-icon"></text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty-list">
+      <view class="empty-icon"></view>
+      <view class="empty-text">暂无生成历史记录</view>
+      <view class="empty-tip">生成话术后会自动记录在这里哦~</view>
+    </view>
+  </view>
+
+  <view class="pagination" wx:if="{{totalPages > 1}}">
+    <view class="page-btn prev {{currentPage <= 1 ? 'disabled' : ''}}" bindtap="loadPrevPage">
+      <text class="btn-arrow-left"></text>
+      <text>上一页</text>
+    </view>
+    <view class="page-info">{{currentPage}}/{{totalPages}}</view>
+    <view class="page-btn next {{currentPage >= totalPages ? 'disabled' : ''}}" bindtap="loadNextPage">
+      <text>下一页</text>
+      <text class="btn-arrow-right"></text>
+    </view>
+  </view>
+</view> 

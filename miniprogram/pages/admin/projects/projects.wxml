@@ -1,0 +1,96 @@
+<view class="container">
+  <view class="header">
+    <view class="title">项目管理</view>
+  </view>
+
+  <!-- 分类导航 -->
+  <view class="category-nav">
+    <scroll-view scroll-x="true" class="category-scroll">
+      <view class="category-list">
+        <view 
+          class="category-item {{currentCategory === item ? 'active' : ''}}" 
+          wx:for="{{categories}}" 
+          wx:key="*this"
+          bindtap="changeCategory"
+          data-category="{{item}}"
+        >{{item}}</view>
+        <view class="category-item add" bindtap="showAddCategoryInput">
+          <text class="add-icon">+</text> 新增分类
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 新增分类输入框 -->
+  <view class="add-input-container" wx:if="{{showAddCategory}}">
+    <view class="add-input-box">
+      <view class="add-input-title">新增分类</view>
+      <input 
+        class="add-input" 
+        placeholder="请输入分类名称" 
+        value="{{newCategoryName}}"
+        bindinput="onNewCategoryInput"
+        focus="true"
+      />
+      <view class="add-input-actions">
+        <view class="cancel-btn" bindtap="cancelAddCategory">取消</view>
+        <view class="confirm-btn" bindtap="confirmAddCategory">确定</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 项目列表 -->
+  <view class="project-container">
+    <view class="category-header" wx:if="{{currentCategory}}">
+      <view class="category-name">{{currentCategory}}</view>
+      <view class="category-actions">
+        <view class="action-btn add-item" bindtap="showAddItemInput">添加项目</view>
+        <view class="action-btn delete-category" bindtap="deleteCategory" data-category="{{currentCategory}}">删除分类</view>
+      </view>
+    </view>
+
+    <view class="project-list" wx:if="{{currentCategory && !loading}}">
+      <block wx:for="{{projectList}}" wx:key="name" wx:if="{{item.name === currentCategory}}">
+        <view wx:if="{{item.items.length > 0}}">
+          <view class="project-item" wx:for="{{item.items}}" wx:key="*this" wx:for-item="project">
+            <view class="project-name">{{project}}</view>
+            <view class="project-actions">
+              <view class="action-btn delete-item" bindtap="deleteItem" data-category="{{currentCategory}}" data-item="{{project}}">删除</view>
+            </view>
+          </view>
+        </view>
+        <view class="empty-tip" wx:else>
+          <text>该分类下暂无项目</text>
+        </view>
+      </block>
+    </view>
+
+    <view class="empty-tip" wx:if="{{!currentCategory && !loading}}">
+      <text>请先创建分类</text>
+    </view>
+  </view>
+
+  <!-- 新增项目输入框 -->
+  <view class="add-input-container" wx:if="{{showAddItem}}">
+    <view class="add-input-box">
+      <view class="add-input-title">添加项目到"{{currentCategory}}"</view>
+      <input 
+        class="add-input" 
+        placeholder="请输入项目名称" 
+        value="{{newItemName}}"
+        bindinput="onNewItemInput"
+        focus="true"
+      />
+      <view class="add-input-actions">
+        <view class="cancel-btn" bindtap="cancelAddItem">取消</view>
+        <view class="confirm-btn" bindtap="confirmAddItem">确定</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

@@ -1,0 +1,288 @@
+/* 页面容器 */
+.container {
+  padding: 30rpx;
+}
+
+/* 页面头部 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.add-btn {
+  background-color: #07c160;
+  color: #fff;
+  font-size: 28rpx;
+  padding: 10rpx 30rpx;
+  border-radius: 10rpx;
+}
+
+/* 邀请码列表表格 */
+.codes-list {
+  width: 100%;
+  border-radius: 10rpx;
+  background-color: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 30rpx;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  background-color: #f8f8f8;
+  padding: 20rpx 0;
+  font-weight: bold;
+  font-size: 28rpx;
+  color: #333;
+  border-bottom: 2rpx solid #eee;
+}
+
+.th {
+  text-align: center;
+  word-break: break-all;
+}
+
+.th-code {
+  flex: 3;
+}
+
+.th-usage {
+  flex: 1;
+}
+
+.th-status {
+  flex: 1;
+}
+
+.th-time {
+  flex: 2;
+}
+
+.th-action {
+  flex: 2;
+}
+
+.table-body {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.tr {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.td {
+  text-align: center;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-code {
+  flex: 3;
+  color: #333;
+  font-weight: bold;
+}
+
+.td-usage {
+  flex: 1;
+}
+
+.td-status {
+  flex: 1;
+}
+
+.td-time {
+  flex: 2;
+  font-size: 24rpx;
+}
+
+.td-action {
+  flex: 2;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 6rpx;
+  font-size: 24rpx;
+}
+
+.status-tag.unused {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.status-tag.used {
+  background-color: #f5f5f5;
+  color: #999;
+}
+
+.action-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 6rpx 16rpx;
+  font-size: 24rpx;
+  margin: 0 10rpx;
+  border-radius: 6rpx;
+}
+
+.copy-btn {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.delete-btn {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.empty-list {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+}
+
+/* 分页 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30rpx;
+}
+
+.page-btn {
+  padding: 10rpx 30rpx;
+  background-color: #f5f5f5;
+  color: #333;
+  border-radius: 6rpx;
+  font-size: 28rpx;
+}
+
+.page-btn.disabled {
+  color: #ccc;
+}
+
+.page-info {
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 弹窗 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  background-color: #fff;
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 30rpx;
+  text-align: center;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+.form-item {
+  margin-bottom: 20rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+
+.usage-explain {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.modal-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+}
+
+.modal-btn.cancel {
+  color: #666;
+  border-right: 1rpx solid #f0f0f0;
+}
+
+.modal-btn.confirm {
+  color: #07c160;
+  font-weight: bold;
+}
+
+/* 添加调试信息样式 */
+.debug-info {
+  margin: 20rpx;
+  padding: 20rpx;
+  background-color: #f0f0f0;
+  border-radius: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.debug-title {
+  font-weight: bold;
+  margin-bottom: 10rpx;
+} 

@@ -1,0 +1,4 @@
+<view class="container">
+  <!-- 这是一个重定向页面，会自动跳转到admin页面 -->
+  <view class="redirect-tip">正在跳转到个人中心...</view>
+</view> 

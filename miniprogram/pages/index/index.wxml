@@ -1,0 +1,56 @@
+<view class="container">
+  <view class="header">
+    <view class="title">美容师邀约话术生成器</view>
+    <view class="usage">剩余次数：{{remainingUsage}} 次</view>
+  </view>
+
+  <view class="form-container">
+    <form bindsubmit="generateScript">
+      <!-- 邀约对象 -->
+      <view class="form-item">
+        <view class="form-item__label">邀约对象</view>
+        <input class="form-item__input" name="inviteTarget" placeholder="请输入邀约对象姓名或称呼" value="{{formData.inviteTarget}}"/>
+      </view>
+
+      <!-- 邀约日期 -->
+      <view class="form-item">
+        <view class="form-item__label">邀约日期</view>
+        <picker mode="date" value="{{formData.inviteDate}}" start="{{minDate}}" bindchange="bindDateChange">
+          <view class="form-item__input {{formData.inviteDate ? '' : 'placeholder'}}">
+            {{formData.inviteDate || '请选择邀约日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 邀约理由 -->
+      <view class="form-item">
+        <view class="form-item__label">邀约理由</view>
+        <input class="form-item__input" name="inviteReason" placeholder="请输入邀约理由" value="{{formData.inviteReason}}"/>
+      </view>
+
+      <!-- 邀约项目1（必填） -->
+      <view class="form-item">
+        <view class="form-item__label">邀约项目1 <text class="required">*</text></view>
+        <input class="form-item__input" name="inviteProject" placeholder="请输入邀约项目名称（必填）" value="{{formData.inviteProject}}"/>
+      </view>
+      
+      <!-- 邀约项目2（选填） -->
+      <view class="form-item">
+        <view class="form-item__label">邀约项目2</view>
+        <input class="form-item__input" name="inviteProject2" placeholder="请输入邀约项目名称（选填）" value="{{formData.inviteProject2}}"/>
+      </view>
+      
+      <!-- 邀约项目3（选填） -->
+      <view class="form-item">
+        <view class="form-item__label">邀约项目3</view>
+        <input class="form-item__input" name="inviteProject3" placeholder="请输入邀约项目名称（选填）" value="{{formData.inviteProject3}}"/>
+      </view>
+
+      <!-- 按钮 -->
+      <view class="btn-group">
+        <button class="primary-btn" form-type="submit">生成话术(等待60秒)</button>
+        <button class="secondary-btn" bindtap="resetForm">清空</button>
+      </view>
+    </form>
+  </view>
+</view> 

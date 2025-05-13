@@ -1,0 +1,349 @@
+/* 页面容器 */
+.container {
+  padding: 30rpx;
+  background-color: #f8f6fe;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 页面头部 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -20rpx;
+  left: 0;
+  right: 0;
+  height: 3rpx;
+  background: linear-gradient(to right, rgba(123, 85, 208, 0.1), rgba(123, 85, 208, 0.8), rgba(123, 85, 208, 0.1));
+  border-radius: 50%;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: bold;
+  color: #7B55D0;
+  letter-spacing: 2rpx;
+  margin-bottom: 6rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.sub-title {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+.stat-badge {
+  background: linear-gradient(135deg, #7B55D0, #a085e7);
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 10rpx 25rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 8rpx rgba(123, 85, 208, 0.3);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.stat-badge:active {
+  transform: scale(0.95);
+}
+
+.stat-number {
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  margin-top: 4rpx;
+}
+
+/* 历史列表 */
+.history-list {
+  width: 100%;
+}
+
+.history-item {
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+  padding: 25rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-left: 6rpx solid #7B55D0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.history-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(123, 85, 208, 0.03), transparent);
+  pointer-events: none;
+}
+
+.item-hover {
+  transform: translateY(-5rpx);
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.1);
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding-bottom: 15rpx;
+  margin-bottom: 20rpx;
+}
+
+.item-time {
+  font-size: 24rpx;
+  color: #888;
+  display: flex;
+  align-items: center;
+}
+
+.time-icon::before {
+  content: "\e639"; /* 使用微信内置图标库的时钟图标编码 */
+  font-family: "weui";
+  margin-right: 8rpx;
+  font-size: 24rpx;
+  color: #7B55D0;
+}
+
+.item-user {
+  font-size: 24rpx;
+  color: #7B55D0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.user-icon::before {
+  content: "\e6b8"; /* 使用微信内置图标库的用户图标编码 */
+  font-family: "weui";
+  margin-right: 8rpx;
+  font-size: 26rpx;
+}
+
+.item-content {
+  padding: 10rpx 0 20rpx;
+}
+
+.content-row {
+  display: flex;
+  margin-bottom: 15rpx;
+}
+
+.content-row:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  width: 170rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.item-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15rpx;
+  padding-top: 15rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.script-count {
+  font-size: 26rpx;
+  color: #999;
+  display: flex;
+  align-items: center;
+}
+
+.count-icon::before {
+  content: "\e645"; /* 使用微信内置图标库的文档图标编码 */
+  font-family: "weui";
+  margin-right: 8rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.view-btn {
+  background: linear-gradient(to right, #7B55D0, #9e78e9);
+  color: #fff;
+  font-size: 26rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 10rpx rgba(123, 85, 208, 0.3);
+  transition: all 0.3s ease;
+}
+
+.view-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 5rpx rgba(123, 85, 208, 0.3);
+}
+
+.btn-text {
+  margin-right: 6rpx;
+  font-weight: 500;
+}
+
+.btn-icon::after {
+  content: "\e6a3"; /* 使用微信内置图标库的右箭头图标编码 */
+  font-family: "weui";
+  font-size: 24rpx;
+}
+
+.empty-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+  color: #999;
+}
+
+.empty-icon {
+  width: 150rpx;
+  height: 150rpx;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  margin-bottom: 30rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-icon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80rpx;
+  height: 80rpx;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M20 2c.552 0 1 .448 1 1v18c0 .552-.448 1-1 1H4c-.552 0-1-.448-1-1V3c0-.552.448-1 1-1h16zm-1 2H5v16h14V4zM8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z' fill='rgba(123,85,208,1)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
+  color: #bbb;
+}
+
+/* 分页 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40rpx;
+  margin-bottom: 60rpx;
+}
+
+.page-btn {
+  padding: 12rpx 30rpx;
+  background-color: #fff;
+  color: #333;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.page-btn:active {
+  background-color: #f9f9f9;
+  transform: scale(0.98);
+}
+
+.page-btn.disabled {
+  color: #ccc;
+  background-color: #f5f5f5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-arrow-left::before {
+  content: "\e620"; /* 使用微信内置图标库的左箭头图标编码 */
+  font-family: "weui";
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+.btn-arrow-right::before {
+  content: "\e621"; /* 使用微信内置图标库的右箭头图标编码 */
+  font-family: "weui";
+  margin-left: 8rpx;
+  font-size: 24rpx;
+}
+
+.page-info {
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 增加一些动画效果 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.history-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.history-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.history-item:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.history-item:nth-child(5) {
+  animation-delay: 0.4s;
+} 

@@ -1,0 +1,70 @@
+<view class="container">
+  <view class="header">
+    <view class="title">邀请码管理</view>
+    <view class="add-btn" bindtap="showCreateModal">生成邀请码</view>
+  </view>
+
+  <view class="codes-list">
+    <view class="table-header">
+      <view class="th th-code">邀请码</view>
+      <view class="th th-usage">使用次数</view>
+      <view class="th th-status">状态</view>
+      <view class="th th-time">创建时间</view>
+      <view class="th th-action">操作</view>
+    </view>
+
+    <view class="table-body">
+      <block wx:if="{{codesList.length > 0}}">
+        <view class="tr" wx:for="{{codesList}}" wx:key="_id">
+          <view class="td td-code">{{item.code || '无效码'}}</view>
+          <view class="td td-usage">{{item.usageCount || 0}}</view>
+          <view class="td td-status">
+            <view class="status-tag {{item.isUsed ? 'used' : 'unused'}}">
+              {{item.isUsed ? '已使用' : '未使用'}}
+            </view>
+          </view>
+          <view class="td td-time">{{formatTime(item.createdAt)}}</view>
+          <view class="td td-action">
+            <view class="action-btns">
+              <view class="action-btn copy-btn" catchtap="copyCode" data-code="{{item.code}}">复制</view>
+              <view wx:if="{{!item.isUsed}}" class="action-btn delete-btn" catchtap="deleteCode" data-id="{{item._id}}">删除</view>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty-list">
+        暂无邀请码，点击"生成邀请码"按钮创建
+      </view>
+    </view>
+  </view>
+
+  <view class="debug-info" wx:if="{{codesList.length === 0 && totalCount > 0}}">
+    <view class="debug-title">调试信息：</view>
+    <view>总数：{{totalCount}}，当前页：{{currentPage}}/{{totalPages}}，每页：{{pageSize}}</view>
+  </view>
+
+  <view class="pagination" wx:if="{{totalPages > 1}}">
+    <view class="page-btn prev {{currentPage <= 1 ? 'disabled' : ''}}" bindtap="loadPrevPage">上一页</view>
+    <view class="page-info">{{currentPage}}/{{totalPages}}</view>
+    <view class="page-btn next {{currentPage >= totalPages ? 'disabled' : ''}}" bindtap="loadNextPage">下一页</view>
+  </view>
+
+  <!-- 生成邀请码弹窗 -->
+  <view class="modal" wx:if="{{showCreateModal}}">
+    <view class="modal-mask" bindtap="hideCreateModal"></view>
+    <view class="modal-content">
+      <view class="modal-title">生成邀请码</view>
+      <view class="modal-body">
+        <view class="form-item">
+          <view class="form-label">使用次数</view>
+          <input class="form-input" type="number" value="{{usageCount}}" bindinput="onUsageCountChange" placeholder="请输入邀请码可使用的次数" />
+        </view>
+        <view class="usage-explain">每个邀请码只能使用一次，使用后可增加相应的使用次数</view>
+      </view>
+      <view class="modal-footer">
+        <view class="modal-btn cancel" bindtap="hideCreateModal">取消</view>
+        <view class="modal-btn confirm" bindtap="createInvitationCode">确定</view>
+      </view>
+    </view>
+  </view>
+</view> 

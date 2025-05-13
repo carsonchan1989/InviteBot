@@ -1,0 +1,53 @@
+<view class="container">
+  <view class="header">
+    <view class="title">兑换邀请码</view>
+    <view class="usage-info">
+      <text>当前剩余使用次数：</text>
+      <text class="usage-count">{{remainingUsage}}</text>
+    </view>
+  </view>
+
+  <view class="redeem-box">
+    <view class="input-area">
+      <input class="code-input" 
+        value="{{code}}" 
+        bindinput="onCodeInput" 
+        placeholder="请输入邀请码" 
+        maxlength="10"
+        placeholder-class="placeholder" 
+      />
+      <view class="clear-btn" wx:if="{{code}}" bindtap="clearInput">×</view>
+    </view>
+    <view class="tip">请输入8位邀请码，字母区分大小写</view>
+    
+    <button class="redeem-btn {{!code ? 'disabled' : ''}}" bindtap="redeemCode" disabled="{{!code}}">
+      兑换
+    </button>
+  </view>
+
+  <view class="usage-explain">
+    <view class="explain-title">使用说明：</view>
+    <view class="explain-item">1. 每个邀请码仅可使用一次</view>
+    <view class="explain-item">2. 成功兑换后将增加相应的使用次数</view>
+    <view class="explain-item">3. 如需更多使用次数，请联系管理员获取邀请码</view>
+  </view>
+
+  <!-- 兑换结果弹窗 -->
+  <view class="result-modal" wx:if="{{showResult}}">
+    <view class="result-mask" bindtap="closeResult"></view>
+    <view class="result-content {{redeemResult.success ? 'success' : 'fail'}}">
+      <view class="result-icon {{redeemResult.success ? 'success-icon' : 'fail-icon'}}">
+        <text wx:if="{{redeemResult.success}}">✓</text>
+        <text wx:else>×</text>
+      </view>
+      <view class="result-title">{{redeemResult.msg}}</view>
+      
+      <block wx:if="{{redeemResult.success}}">
+        <view class="result-detail">增加使用次数：{{redeemResult.addedUsage}} 次</view>
+        <view class="result-detail">当前使用次数：{{redeemResult.currentUsage}} 次</view>
+      </block>
+      
+      <view class="result-btn" bindtap="closeResult">确定</view>
+    </view>
+  </view>
+</view> 

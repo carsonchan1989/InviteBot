@@ -1,0 +1,88 @@
+<view class="container">
+  <view class="header">
+    <view class="title">用户管理</view>
+    <view class="add-btn" bindtap="addNewUser">添加用户</view>
+  </view>
+
+  <view class="search-filter">
+    <view class="search-box">
+      <input 
+        class="search-input" 
+        placeholder="搜索用户" 
+        value="{{searchValue}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+      <view class="clear-btn" wx:if="{{searchValue}}" bindtap="onSearchClear">×</view>
+    </view>
+    
+    <view class="filter-row">
+      <view class="filter-item">
+        <picker bindchange="onFilterRoleChange" value="{{filterRole}}" range="{{['全部角色', '管理员', '美容师']}}" range-key="">
+          <view class="picker">
+            {{filterRole === 'all' ? '全部角色' : (filterRole === 'admin' ? '管理员' : '美容师')}}
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      
+      <view class="filter-item">
+        <picker bindchange="onSortChange" value="{{sortBy + '_' + sortOrder}}" range="{{['注册时间降序', '注册时间升序', '剩余次数降序', '剩余次数升序']}}" range-key="">
+          <view class="picker">
+            {{sortBy === 'createdAt' ? (sortOrder === 'desc' ? '注册时间降序' : '注册时间升序') : (sortOrder === 'desc' ? '剩余次数降序' : '剩余次数升序')}}
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <view class="user-list">
+    <block wx:if="{{userList.length > 0}}">
+      <view class="user-item" wx:for="{{userList}}" wx:key="_id">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+          <view wx:else class="default-avatar">{{item.nickName ? item.nickName.substring(0,1) : '用'}}</view>
+        </view>
+        <view class="user-info">
+          <view class="user-name">{{item.nickName || '未命名用户'}}
+            <text class="user-id" wx:if="{{!item.nickName}}">({{item.openid.substring(0,8)}}...)</text>
+          </view>
+          <view class="user-meta">
+            <text class="role {{item.role === 'admin' ? 'admin' : 'beautician'}}">{{item.roleName}}</text>
+            <text class="create-time">注册于: {{item.createTime}}</text>
+          </view>
+          <view class="user-usage">
+            <text>剩余次数: <text class="highlight">{{item.remainingUsage || 0}}</text></text>
+            <text>已用次数: {{item.usedUsage || 0}}</text>
+          </view>
+        </view>
+        
+        <view class="actions">
+          <view class="action-btn edit" bindtap="editUser" data-id="{{item._id}}">编辑</view>
+          <view class="action-btn add-usage" bindtap="addUsage" data-id="{{item._id}}" data-name="{{item.nickName || '该用户'}}">
+            增加次数
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty-tip" wx:elif="{{!loading}}">
+      <text>暂无用户数据</text>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <view class="pagination-tip" wx:if="{{currentPage < totalPages}}">
+    <text>上拉加载更多</text>
+  </view>
+
+  <view class="pagination-tip" wx:elif="{{userList.length > 0 && !loading}}">
+    <text>已加载全部数据</text>
+  </view>
+</view> 

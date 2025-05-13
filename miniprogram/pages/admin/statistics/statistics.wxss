@@ -1,0 +1,72 @@
+/* pages/admin/statistics/statistics.wxss */
+.container {
+  padding: 30rpx;
+  background-color: #f6f6f6;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 统计卡片 */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.stats-card {
+  width: 48%;
+  background: white;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.stats-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #ff6b81;
+  margin-bottom: 10rpx;
+}
+
+.stats-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 加载状态 */
+.loading {
+  text-align: center;
+  padding: 50rpx 0;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid #f3f3f3;
+  border-top: 4rpx solid #ff6b81;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 10rpx;
+} 
