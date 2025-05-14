@@ -37,6 +37,12 @@ App({
       this.globalData.isLoggedIn = true;
       this.globalData.role = userInfo.role || 'beautician';
       console.log('从本地存储获取用户信息:', userInfo);
+      
+      // 检查头像URL是否为云文件ID格式，如果不是则可能是临时链接，需要刷新用户信息
+      if (userInfo.avatarUrl && !userInfo.avatarUrl.startsWith('cloud://')) {
+        console.log('检测到头像可能是临时链接，将在启动时刷新用户信息');
+        this.globalData.needRefreshUserInfo = true;
+      }
     }
   },
   
@@ -66,6 +72,11 @@ App({
             // 更新头像和昵称
             if (userData.avatarUrl) {
               this.globalData.userInfo.avatarUrl = userData.avatarUrl;
+              
+              // 测试头像URL是否有效
+              if (userData.avatarUrl.startsWith('cloud://') || userData.avatarUrl.startsWith('http')) {
+                this.testImageUrl(userData.avatarUrl);
+              }
             }
             
             if (userData.nickName) {
@@ -92,6 +103,29 @@ App({
     });
   },
 
+  // 测试图片URL是否有效
+  testImageUrl: function(url) {
+    // 对于云存储文件，不需要测试，直接返回
+    if (url.startsWith('cloud://')) {
+      console.log('云存储图片无需测试有效性:', url);
+      return;
+    }
+    
+    console.log('测试头像URL是否有效:', url);
+    wx.getImageInfo({
+      src: url,
+      success: res => {
+        console.log('头像URL有效:', res);
+      },
+      fail: err => {
+        console.error('头像URL无效，将使用默认头像:', err);
+        // 如果头像无效，可以设置为默认头像
+        this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
+        wx.setStorageSync('userInfo', this.globalData.userInfo);
+      }
+    });
+  },
+
   // 全局数据
   globalData: {
     userInfo: null,
@@ -100,6 +134,7 @@ App({
     remainingUsage: 0, // 剩余使用次数
     tempInviteInfo: null, // 临时存储邀约信息
     tempScriptData: null, // 临时存储生成的话术数据
-    isAppReady: false
+    isAppReady: false,
+    needRefreshUserInfo: false // 标记是否需要刷新用户信息
   }
 });

@@ -357,4 +357,62 @@ async function getUserById(userId) {
       error: error
     };
   }
+}
+
+// 添加新用户
+async function addUser(userData) {
+  try {
+    // 确保必要字段存在
+    if (!userData.openid) {
+      return {
+        code: -1,
+        msg: '缺少必要字段: openid'
+      };
+    }
+    
+    // 检查该openid用户是否已存在
+    const existUser = await usersCollection.where({
+      openid: userData.openid
+    }).get();
+    
+    if (existUser.data && existUser.data.length > 0) {
+      return {
+        code: -1,
+        msg: '用户已存在'
+      };
+    }
+    
+    // 设置默认值
+    const timestamp = Date.now();
+    const newUser = {
+      openid: userData.openid,
+      role: userData.role || 'beautician',
+      remainingUsage: 5, // 默认赠送5次使用机会
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      nickName: userData.nickName || '',
+      avatarUrl: userData.avatarUrl || ''
+    };
+    
+    // 添加用户
+    const addResult = await usersCollection.add({
+      data: newUser
+    });
+    
+    return {
+      code: 0,
+      msg: '添加用户成功',
+      data: {
+        ...newUser,
+        _id: addResult._id
+      }
+    };
+  } catch (error) {
+    console.error('添加用户失败:', error);
+    return {
+      code: -1,
+      msg: '添加用户失败',
+      error: error
+    };
+  }
 } 

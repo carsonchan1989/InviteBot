@@ -20,7 +20,45 @@ Page({
       });
     }
     
-    this.getUserInfo();
+    // 获取全局应用实例
+    const app = getApp();
+    
+    // 检查是否需要强制刷新用户信息
+    if (app.globalData.needRefreshUserInfo) {
+      console.log('检测到需要刷新用户信息');
+      app.globalData.needRefreshUserInfo = false; // 重置标志
+      this.forceRefreshUserInfo();
+    } else {
+      this.getUserInfo();
+    }
+  },
+
+  // 强制刷新用户信息
+  forceRefreshUserInfo: function() {
+    console.log('强制刷新用户信息');
+    wx.showLoading({
+      title: '刷新信息...',
+      mask: false
+    });
+    
+    const app = getApp();
+    app.getUserInfo().then(userInfo => {
+      console.log('用户信息刷新成功:', userInfo);
+      this.setData({
+        role: app.globalData.role || 'beautician',
+        remainingUsage: app.globalData.remainingUsage || 0,
+        avatarUrl: userInfo.avatarUrl || '',
+        nickName: userInfo.nickName || ''
+      });
+      wx.hideLoading();
+    }).catch(err => {
+      console.error('用户信息刷新失败:', err);
+      wx.hideLoading();
+      wx.showToast({
+        title: '信息刷新失败',
+        icon: 'none'
+      });
+    });
   },
 
   // 获取用户信息

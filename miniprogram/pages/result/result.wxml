@@ -49,8 +49,8 @@
     </block>
     <block wx:else>
       <view class="empty-data">
-        <view wx:if="{{isPolling}}" class="loading-text">正在生成话术，请耐心等待60秒...</view>
-        <view wx:else class="empty-text">暂无数据，请点击下方按钮重新生成</view>
+        <view wx:if="{{isPolling}}" class="loading-text">正在生成话术<br/>请耐心等待60秒...</view>
+        <view wx:else class="empty-text">暂无数据<br/>请点击下方按钮重新生成</view>
       </view>
     </block>
   </view>

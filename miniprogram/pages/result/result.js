@@ -44,7 +44,7 @@ Page({
       
       // 显示加载中
       wx.showLoading({
-        title: '正在生成话术',
+        title: '正在生成话术\n请耐心等待60秒',
         mask: true
       });
       
@@ -157,7 +157,7 @@ Page({
     }
 
     wx.showLoading({
-      title: '重新生成中，请耐心等待60秒',
+      title: '开始重新生成\n请耐心等待60秒',
       mask: true
     });
 
@@ -226,7 +226,21 @@ Page({
   // 轮询任务结果
   pollTaskResult: function(taskId, retryCount = 0) {
     const maxRetries = 30; // 最多轮询30次，大约5分钟
-    const pollingInterval = 5000; // 每5秒轮询一次
+    
+    // 渐进式轮询间隔：第一次45秒，第二次25秒，第三次15秒，之后每5秒
+    let pollingInterval = 5000; // 默认5秒
+    if (retryCount === 0) {
+      pollingInterval = 45000; // 第一次等待45秒
+      console.log('首次轮询，等待45秒...');
+    } else if (retryCount === 1) {
+      pollingInterval = 25000; // 第二次等待25秒
+      console.log('第二次轮询，等待25秒...');
+    } else if (retryCount === 2) {
+      pollingInterval = 15000; // 第三次等待15秒
+      console.log('第三次轮询，等待15秒...');
+    } else {
+      console.log('后续轮询，每5秒一次...');
+    }
     
     if (retryCount >= maxRetries) {
       this.setData({ isPolling: false });
@@ -239,6 +253,24 @@ Page({
     }
     
     console.log(`开始第${retryCount+1}次轮询任务结果，taskId:`, taskId);
+    
+    // 更新加载提示，告知用户当前状态
+    if (retryCount === 0) {
+      wx.showLoading({
+        title: '正在生成中',
+        mask: true
+      });
+    } else if (retryCount === 1) {
+      wx.showLoading({
+        title: '继续生成中\n请耐心等待',
+        mask: true
+      });
+    } else if (retryCount > 5) {
+      wx.showLoading({
+        title: '生成需要较长时间\n请继续等待',
+        mask: true
+      });
+    }
     
     // 查询任务结果
     wx.cloud.callFunction({

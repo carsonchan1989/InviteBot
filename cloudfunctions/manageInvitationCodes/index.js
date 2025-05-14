@@ -103,7 +103,7 @@ async function generateInvitationCode(event, wxContext) {
   const now = new Date();
   const codeData = {
     code: code,
-    usageCount: parseInt(usageCount) || 10,
+    usageCount: parseInt(usageCount) || 5,
     isUsed: false,
     createdBy: adminId,
     createdAt: now,

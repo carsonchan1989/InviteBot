@@ -6,8 +6,8 @@ cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 });
 
-// 设置axios默认超时时间为30秒，避免请求超时
-axios.defaults.timeout = 30000;
+// 设置axios默认超时时间为60秒，避免请求超时
+axios.defaults.timeout = 60000;
 
 const db = cloud.database();
 const usersCollection = db.collection('users');
@@ -76,7 +76,7 @@ async function callAPIWithRetry(data, headers, taskId, maxRetries = 2) {
         // 在请求中明确设置超时时间
         response = await axios.post(`${API_URL}/chat/completions`, data, { 
           headers,
-          timeout: 30000 // 明确在请求中设置30秒超时
+          timeout: 60000 // 明确在请求中设置60秒超时
         });
       }
       
@@ -190,7 +190,7 @@ async function handleStreamResponse(apiUrl, data, headers, taskId) {
         data: data,
         headers: headers,
         responseType: 'stream',
-        timeout: 120000 // 流式响应使用更长的超时时间
+        timeout: 180000 // 流式响应使用更长的超时时间
       });
       
       console.log('成功建立流式连接');
@@ -404,7 +404,7 @@ ${projectsText}
       temperature: 0.7,
       max_tokens: 1200,
       stream: true,  // 启用流式响应
-      timeout_seconds: 25 // 明确告诉模型需要快速响应
+      timeout_seconds: 45 // 明确告诉模型需要较长时间响应
     };
     
     // 确保请求头格式正确

@@ -126,7 +126,7 @@ Page({
     
     // 显示加载中
     wx.showLoading({
-      title: '正在生成话术，请耐心等待60秒',
+      title: '开始生成\n请耐心等待较长时间',
       mask: true
     });
     

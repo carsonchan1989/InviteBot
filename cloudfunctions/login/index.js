@@ -75,7 +75,7 @@ exports.main = async (event, context) => {
       const newUser = {
         openid: openid,
         role: 'beautician', // 默认角色为美容师
-        remainingUsage: 10, // 默认赠送10次使用机会
+        remainingUsage: 5, // 默认赠送5次使用机会
         createdAt: timestamp,
         updatedAt: timestamp
       };
@@ -102,7 +102,7 @@ exports.main = async (event, context) => {
           msg: '注册成功',
           openid: openid,
           role: 'beautician',
-          remainingUsage: 10,
+          remainingUsage: 5,
           nickName: nickName || '',
           avatarUrl: avatarUrl || '',
           _id: addResult._id

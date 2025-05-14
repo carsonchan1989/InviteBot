@@ -127,28 +127,65 @@ Page({
       finalNickname = this.data.customNickname;
     }
     
-    // 若选择了自定义头像，先上传到云存储
-    if (this.data.avatarType === 'custom' && this.data.customAvatarUrl) {
-      const cloudPath = `avatars/${Date.now()}-${Math.floor(Math.random() * 1000)}.png`;
-      wx.cloud.uploadFile({
-        cloudPath: cloudPath,
-        filePath: this.data.customAvatarUrl,
-        success: res => {
-          this.updateUserProfile(res.fileID, finalNickname);
-        },
-        fail: err => {
-          console.error('上传头像失败', err);
-          wx.hideLoading();
-          wx.showToast({
-            title: '头像上传失败，请重试',
-            icon: 'none'
-          });
-        }
-      });
+    // 处理头像 - 无论是微信头像还是自定义头像，都上传到云存储以获得永久链接
+    if ((this.data.avatarType === 'wechat' && this.data.tempAvatarUrl && this.data.tempAvatarUrl.startsWith('http')) || 
+        (this.data.avatarType === 'custom' && this.data.customAvatarUrl)) {
+      
+      const avatarToUpload = this.data.avatarType === 'wechat' ? this.data.tempAvatarUrl : this.data.customAvatarUrl;
+      
+      // 对于微信头像URL，需要先下载到本地临时文件
+      if (this.data.avatarType === 'wechat' && avatarToUpload.startsWith('http')) {
+        wx.downloadFile({
+          url: avatarToUpload,
+          success: res => {
+            if (res.statusCode === 200) {
+              this.uploadAvatarToCloud(res.tempFilePath, finalNickname);
+            } else {
+              console.error('下载微信头像失败', res);
+              wx.hideLoading();
+              wx.showToast({
+                title: '头像处理失败，请重试',
+                icon: 'none'
+              });
+            }
+          },
+          fail: err => {
+            console.error('下载微信头像失败', err);
+            wx.hideLoading();
+            wx.showToast({
+              title: '头像处理失败，请重试',
+              icon: 'none'
+            });
+          }
+        });
+      } else {
+        // 直接上传本地文件
+        this.uploadAvatarToCloud(avatarToUpload, finalNickname);
+      }
     } else {
-      // 微信头像或者没有更改头像，直接更新用户资料
+      // 没有更改头像，直接更新用户资料
       this.updateUserProfile(finalAvatarUrl, finalNickname);
     }
+  },
+  
+  // 上传头像到云存储
+  uploadAvatarToCloud: function(filePath, nickname) {
+    const cloudPath = `avatars/${Date.now()}-${Math.floor(Math.random() * 1000)}.png`;
+    wx.cloud.uploadFile({
+      cloudPath: cloudPath,
+      filePath: filePath,
+      success: res => {
+        this.updateUserProfile(res.fileID, nickname);
+      },
+      fail: err => {
+        console.error('上传头像失败', err);
+        wx.hideLoading();
+        wx.showToast({
+          title: '头像上传失败，请重试',
+          icon: 'none'
+        });
+      }
+    });
   },
   
   // 更新用户资料到云数据库
