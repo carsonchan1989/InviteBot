@@ -1,7 +1,8 @@
 Page({
   data: {
     isLoading: false,
-    hasUserAgreed: false,  // 用户是否同意授权
+    hasUserAgreed: false,  // 用户是否同意授权头像昵称
+    hasPrivacyAgreed: false, // 用户是否同意隐私政策
     avatarUrl: '/images/tabbar/my.png',  // 默认头像
     nickName: '',  // 用户昵称
     currentStep: 1,  // 当前步骤：1-选择头像昵称, 2-同意授权, 3-登录
@@ -43,7 +44,8 @@ Page({
               showSimpleLogin: true,
               avatarUrl: userInfo.avatarUrl || '/images/tabbar/my.png',
               nickName: userInfo.nickName || '',
-              hasUserAgreed: true  // 已注册用户默认已同意
+              hasUserAgreed: true,  // 已注册用户默认已同意头像昵称授权
+              hasPrivacyAgreed: false // 隐私协议需要用户明确勾选，不能默认同意
             });
           } else {
             // 未注册用户，显示完整注册界面
@@ -71,10 +73,18 @@ Page({
     });
   },
 
-  // 切换用户同意状态
+  // 切换头像昵称授权同意状态
   toggleAgreement: function() {
     this.setData({
       hasUserAgreed: !this.data.hasUserAgreed
+    });
+    this.updateCurrentStep();
+  },
+
+  // 切换隐私政策同意状态
+  togglePrivacyAgreement: function() {
+    this.setData({
+      hasPrivacyAgreed: !this.data.hasPrivacyAgreed
     });
     this.updateCurrentStep();
   },
@@ -115,7 +125,7 @@ Page({
     let step = 1;
     if (this.data.avatarUrl && this.data.avatarUrl !== '/images/tabbar/my.png' && this.data.nickName) {
       step = 2;
-      if (this.data.hasUserAgreed) {
+      if (this.data.hasUserAgreed && this.data.hasPrivacyAgreed) {
         step = 3;
       }
     }
@@ -126,29 +136,47 @@ Page({
 
   // 检查是否可以登录
   canLogin() {
-    // 已注册用户且显示简化登录界面时，始终返回true
+    // 已注册用户且显示简化登录界面时
     if (this.data.isRegistered && this.data.showSimpleLogin) {
-      return true;
+      // 必须同意隐私政策才可登录
+      return this.data.hasPrivacyAgreed;
     }
     
-    return this.data.hasUserAgreed && 
+    // 修复判断逻辑，必须同意隐私政策
+    const canLogin = this.data.hasUserAgreed && 
+           this.data.hasPrivacyAgreed && 
            this.data.avatarUrl && 
-           this.data.avatarUrl !== '/images/tabbar/my.png' && 
            this.data.nickName;
+    
+    console.log('登录按钮状态检查:', {
+      hasUserAgreed: this.data.hasUserAgreed,
+      hasPrivacyAgreed: this.data.hasPrivacyAgreed,
+      avatarUrl: this.data.avatarUrl,
+      nickName: this.data.nickName,
+      canLogin: canLogin
+    });
+    
+    return canLogin;
   },
 
   // 用户登录
   login: function() {
+    console.log('登录按钮被点击');
+    
     // 检查是否可以登录
     if (!this.canLogin()) {
       let message = '';
-      if (!this.data.avatarUrl || this.data.avatarUrl === '/images/tabbar/my.png') {
+      if (!this.data.avatarUrl) {
         message = '请先选择头像';
       } else if (!this.data.nickName) {
         message = '请输入昵称';
       } else if (!this.data.hasUserAgreed) {
-        message = '请先同意授权';
+        message = '请先同意授权获取头像和昵称';
+      } else if (!this.data.hasPrivacyAgreed) {
+        message = '请阅读并同意隐私政策和用户协议';
       }
+      
+      console.log('登录检查失败:', message);
       
       wx.showToast({
         title: message,
@@ -158,7 +186,10 @@ Page({
       return;
     }
 
-    if (this.data.isLoading) return;
+    if (this.data.isLoading) {
+      console.log('已经在登录中，忽略重复点击');
+      return;
+    }
     
     // 设置加载状态
     this.setData({ isLoading: true });
@@ -174,6 +205,8 @@ Page({
       nickName: this.data.nickName,
       avatarUrl: this.data.avatarUrl
     };
+    
+    console.log('准备调用login云函数，用户信息:', userInfo);
         
     // 调用云函数进行登录，并传递用户信息
     wx.cloud.callFunction({

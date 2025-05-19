@@ -248,6 +248,14 @@
   letter-spacing: -0.5rpx;
 }
 
+.tip-text {
+  color: #ff6600;
+  font-size: 24rpx;
+  line-height: 1.5;
+  margin-top: 10rpx;
+  font-weight: 500;
+}
+
 .slogan-container {
   margin-top: 20rpx;
   width: 100%;

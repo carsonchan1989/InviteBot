@@ -1,0 +1,59 @@
+{
+  "version": "2.0",
+  "envId": "cloud1-5gr0cuqod1d81d0f",
+  "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
+  "functionRoot": "cloudfunctions",
+  "functions": [
+    {
+      "name": "checkUser",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    },
+    {
+      "name": "generateScript",
+      "timeout": 60,
+      "runtime": "Nodejs12.16",
+      "memorySize": 256
+    },
+    {
+      "name": "getUser",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    },
+    {
+      "name": "login",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    },
+    {
+      "name": "manageUsers",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    },
+    {
+      "name": "manageProjects",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    },
+    {
+      "name": "updateUserProfile",
+      "timeout": 10,
+      "runtime": "Nodejs12.16",
+      "memorySize": 128
+    }
+  ],
+  "framework": {
+    "name": "wxcloud-invitebot",
+    "plugins": {
+      "func": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {}
+      }
+    }
+  }
+} 

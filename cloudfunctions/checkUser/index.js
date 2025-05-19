@@ -1,17 +1,35 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 
-cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
-});
+cloud.init({  env: "cloud1-5gr0cuqod1d81d0f"});
 
 const db = cloud.database();
 const usersCollection = db.collection('users');
+
+// 初始化数据库集合
+async function initCollections() {
+  try {
+    console.log('开始初始化数据库集合...');
+    // 检查集合是否存在，如不存在则创建
+    try {
+      await db.createCollection('users');
+      console.log('users集合创建成功');
+    } catch (err) {
+      // 如果集合已存在，会报错，这是正常的
+      console.log('users集合已存在或创建失败:', err.message);
+    }
+  } catch (error) {
+    console.error('初始化数据库集合失败:', error);
+  }
+}
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
+  
+  // 先初始化集合
+  await initCollections();
   
   console.log('检查用户是否已注册，openid:', openid);
   

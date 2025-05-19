@@ -209,84 +209,87 @@
   font-weight: bold;
 }
 
-/* 授权复选框样式 */
-.auth-agreement {
+/* 添加协议勾选样式 */
+.auth-agreement, .privacy-agreement {
   display: flex;
   align-items: center;
-  justify-content: center;
   margin-bottom: 30rpx;
+  width: 90%;
 }
 
 .checkbox {
   width: 36rpx;
   height: 36rpx;
-  border: 2rpx solid #ccc;
+  border: 2rpx solid #7B55D0;
   border-radius: 6rpx;
   margin-right: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .checkbox.checked {
-  border-color: #7B55D0;
   background-color: #7B55D0;
 }
 
 .checkbox-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 20rpx;
-  height: 20rpx;
-  background-color: white;
-  border-radius: 2rpx;
+  height: 12rpx;
+  border-left: 4rpx solid #fff;
+  border-bottom: 4rpx solid #fff;
+  transform-origin: center;
+  transform: translate(-50%, -70%) rotate(-45deg);
 }
 
 .agreement-text {
-  font-size: 28rpx;
-  color: #333;
-}
-
-/* 按钮容器 */
-.btn-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20rpx;
-}
-
-.login-btn {
-  width: 100%;
-  height: 88rpx;
-  line-height: 88rpx;
-  background-color: #7B55D0;
-  color: #fff;
-  border-radius: 10rpx;
-  font-size: 32rpx;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease; /* 添加过渡效果 */
-}
-
-.login-btn.disabled {
-  background-color: #cccccc;
-  color: #999999;
-  pointer-events: none; /* 禁用点击 */
-}
-
-.auth-tip {
-  font-size: 24rpx;
-  color: #ff5252;
-  text-align: center;
-  margin-bottom: 30rpx;
-}
-
-.privacy-policy {
-  font-size: 24rpx;
-  color: #999;
-  text-align: center;
+  font-size: 26rpx;
+  color: #666;
+  flex: 1;
+  line-height: 1.4;
 }
 
 .link {
   color: #7B55D0;
+  display: inline;
 }
+
+/* 登录按钮样式 */
+.btn-container {
+  width: 80%;
+  margin-top: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-btn {
+  width: 100%;
+  height: 90rpx;
+  background: linear-gradient(135deg, #8a63d2, #6c45c4);
+  color: white;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 6rpx 20rpx rgba(123, 85, 208, 0.3);
+}
+
+.login-btn.disabled {
+  background: linear-gradient(135deg, #b5a6d2, #a48dc4);
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 授权提示样式 */
+.login-tip, .auth-tip {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+/* 删除原有的privacy-policy样式，使用privacy-agreement替代 */

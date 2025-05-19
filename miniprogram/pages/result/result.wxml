@@ -58,12 +58,13 @@
   <!-- 宣传部分 -->
   <view class="promo-section">
     <view class="qrcode-container">
-      <image class="qrcode" src="../../images/a1d72d522d9264c6b7f652dd7531708.png" mode="aspectFit"></image>
+      <image class="qrcode" src="../../images/a1d72d522d9264c6b7f652dd7531708.png" mode="aspectFit" show-menu-by-longpress="true"></image>
       <view class="qrcode-text">
         <text class="blue-text">↓美业智能体个性化工具定制↓</text>
         <text class="blue-text">↓打造你听话照做的智能店长↓</text>
         <text class="blue-text">↓更多赚本增效智能体工具↓</text>
         <text class="blue-text">Tel: 181-2682-2250</text>
+        <text class="tip-text">长按二维码可识别添加微信</text>
       </view>
     </view>
     

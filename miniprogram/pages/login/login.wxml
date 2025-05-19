@@ -14,15 +14,21 @@
       <view class="welcome-back">欢迎回来，{{nickName}}</view>
     </view>
     
-    <view class="btn-container">
-      <button class="login-btn" bindtap="login">一键登录</button>
+    <!-- 隐私政策勾选区域 -->
+    <view class="privacy-agreement">
+      <view class="checkbox {{hasPrivacyAgreed ? 'checked' : ''}}" bindtap="togglePrivacyAgreement">
+        <view class="checkbox-inner" wx:if="{{hasPrivacyAgreed}}"></view>
+      </view>
+      <view class="agreement-text">
+        我已阅读并同意
+        <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+        和
+        <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+      </view>
     </view>
     
-    <view class="privacy-policy">
-      登录即表示您已同意
-      <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
-      和
-      <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+    <view class="btn-container">
+      <button class="login-btn {{!hasPrivacyAgreed ? 'disabled' : ''}}" bindtap="login">一键登录</button>
     </view>
   </view>
 
@@ -48,6 +54,7 @@
     
     <view class="login-tip">{{(avatarUrl == '/images/tabbar/my.png') ? '请先点击选择头像' : (!nickName ? '请输入您的昵称' : '信息已完善，请继续')}}</view>
     
+    <!-- 头像昵称授权同意 -->
     <view class="auth-agreement">
       <view class="checkbox {{hasUserAgreed ? 'checked' : ''}}" bindtap="toggleAgreement">
         <view class="checkbox-inner" wx:if="{{hasUserAgreed}}"></view>
@@ -55,17 +62,28 @@
       <view class="agreement-text" bindtap="toggleAgreement">我同意授权获取头像和昵称</view>
     </view>
     
+    <!-- 隐私政策勾选区域 -->
+    <view class="privacy-agreement">
+      <view class="checkbox {{hasPrivacyAgreed ? 'checked' : ''}}" bindtap="togglePrivacyAgreement">
+        <view class="checkbox-inner" wx:if="{{hasPrivacyAgreed}}"></view>
+      </view>
+      <view class="agreement-text">
+        我已阅读并同意
+        <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+        和
+        <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+      </view>
+    </view>
+    
     <view class="btn-container">
       <button class="login-btn {{!canLogin() ? 'disabled' : ''}}" bindtap="login">微信一键登录</button>
     </view>
     
-    <view class="auth-tip">{{(avatarUrl == '/images/tabbar/my.png') ? '请先点击上方选择头像' : (!nickName ? '请先输入您的昵称' : (hasUserAgreed ? '点击登录按钮完成登录' : '请勾选同意授权选项'))}}</view>
-    
-    <view class="privacy-policy">
-      登录即表示您已同意
-      <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
-      和
-      <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+    <view class="auth-tip">
+      {{(avatarUrl == '/images/tabbar/my.png') ? '请先点击上方选择头像' : 
+        (!nickName ? '请先输入您的昵称' : 
+          (!hasUserAgreed ? '请勾选同意授权选项' : 
+            (!hasPrivacyAgreed ? '请阅读并勾选同意隐私政策和用户协议' : '点击登录按钮完成登录')))}}
     </view>
   </view>
 </view> 

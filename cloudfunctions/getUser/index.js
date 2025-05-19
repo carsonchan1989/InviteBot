@@ -1,9 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 
-cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
-});
+cloud.init({  env: "cloud1-5gr0cuqod1d81d0f"});
 
 const db = cloud.database();
 const usersCollection = db.collection('users');

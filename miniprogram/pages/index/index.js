@@ -12,8 +12,8 @@ Page({
       minDate: `${year}-${month}-${day}`
     });
     
-    // 获取用户剩余使用次数
-    this.getUserInfo();
+    // 检查用户是否登录
+    this.checkLoginStatus();
   },
 
   onShow: function() {
@@ -24,13 +24,71 @@ Page({
       });
     }
     
+    // 检查用户是否登录      
+    const app = getApp();
+    if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+      this.redirectToLogin();
+      return;
+    }
+    
     // 每次页面显示时更新用户信息
     this.getUserInfo();
+  },
+
+  // 检查登录状态，如果未登录则跳转到登录页面
+  checkLoginStatus: function() {
+    const app = getApp();
+
+    // 如果已知是新用户或者未登录，直接跳转到登录页
+    if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+      this.redirectToLogin();
+      return;
+    }
+
+    // 如果应用尚未准备好，等待数据加载完成
+    if (!app.globalData.isAppReady) {
+      console.log('等待应用初始化完成...');
+      const checkReady = setInterval(() => {
+        if (app.globalData.isAppReady) {
+          clearInterval(checkReady);
+          if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+            this.redirectToLogin();
+          } else {
+            this.getUserInfo();
+          }
+        }
+      }, 300);
+      
+      // 设置最长等待时间
+      setTimeout(() => {
+        clearInterval(checkReady);
+        if (!app.globalData.isLoggedIn) {
+          this.redirectToLogin();
+        }
+      }, 5000);
+    } else {
+      // 应用已准备好，获取用户信息
+      this.getUserInfo();
+    }
+  },
+
+  // 跳转到登录页面
+  redirectToLogin: function() {
+    console.log('用户未登录，跳转到登录页面');
+    wx.redirectTo({
+      url: '/pages/login/login'
+    });
   },
 
   // 获取用户信息
   getUserInfo: function() {
     const app = getApp();
+    
+    // 如果用户未登录，跳转到登录页
+    if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+      this.redirectToLogin();
+      return;
+    }
     
     // 如果应用已准备好，直接使用全局数据
     if (app.globalData.isAppReady) {
@@ -44,6 +102,13 @@ Page({
       const checkReady = setInterval(() => {
         if (app.globalData.isAppReady) {
           clearInterval(checkReady);
+          
+          // 再次检查登录状态
+          if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+            this.redirectToLogin();
+            return;
+          }
+          
           this.setData({
             remainingUsage: app.globalData.remainingUsage || 0
           });
@@ -65,8 +130,6 @@ Page({
       'formData.inviteDate': e.detail.value
     });
   },
-
-  
 
   // 生成话术
   generateScript: function(e) {

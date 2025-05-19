@@ -3,7 +3,7 @@ const cloud = require('wx-server-sdk');
 const axios = require('axios');
 
 cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
+  env: "cloud1-5gr0cuqod1d81d0f"
 });
 
 // 设置axios默认超时时间为60秒，避免请求超时
