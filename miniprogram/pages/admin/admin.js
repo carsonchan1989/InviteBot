@@ -36,39 +36,64 @@ Page({
     });
     
     const app = getApp();
-    app.getUserInfo().then(userInfo => {
+    app.getUserInfo(true).then(userInfo => {
       console.log('用户信息刷新成功:', userInfo);
       
-      // 手动检查并下载头像
-      if (userInfo && userInfo.avatarUrl && userInfo.avatarUrl.startsWith('cloud://')) {
-        // 如果是云文件ID，需要获取临时链接
-        wx.cloud.getTempFileURL({
-          fileList: [userInfo.avatarUrl],
-          success: res => {
-            if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
-              console.log('获取到头像临时链接:', res.fileList[0].tempFileURL);
-              // 将临时链接保存到本地
-              this.setData({
-                avatarUrl: res.fileList[0].tempFileURL
-              });
-              
-              // 更新全局数据中的临时URL
-              if (app.globalData.userInfo) {
-                app.globalData.userInfo.tempAvatarUrl = res.fileList[0].tempFileURL;
-                // 更新本地存储
-                wx.setStorageSync('userInfo', app.globalData.userInfo);
+      // 检查头像
+      if (userInfo) {
+        let avatarToShow = '';
+        
+        // 优先使用临时头像链接
+        if (userInfo.tempAvatarUrl) {
+          console.log('使用临时头像链接:', userInfo.tempAvatarUrl);
+          avatarToShow = userInfo.tempAvatarUrl;
+        } 
+        // 其次检查云存储头像并获取临时链接
+        else if (userInfo.avatarUrl && userInfo.avatarUrl.startsWith('cloud://')) {
+          console.log('检测到云存储头像，获取临时链接:', userInfo.avatarUrl);
+          // 如果是云文件ID，需要获取临时链接
+          wx.cloud.getTempFileURL({
+            fileList: [userInfo.avatarUrl],
+            success: res => {
+              if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+                console.log('获取到头像临时链接:', res.fileList[0].tempFileURL);
+                // 将临时链接保存到本地
+                this.setData({
+                  avatarUrl: res.fileList[0].tempFileURL
+                });
+                
+                // 更新全局数据中的临时URL
+                if (app.globalData.userInfo) {
+                  app.globalData.userInfo.tempAvatarUrl = res.fileList[0].tempFileURL;
+                  // 更新本地存储
+                  wx.setStorageSync('userInfo', app.globalData.userInfo);
+                }
               }
+            },
+            fail: err => {
+              console.error('获取头像临时链接失败，使用默认头像:', err);
+              this.setData({
+                avatarUrl: '/images/tabbar/my.png'
+              });
             }
-          }
+          });
+          // 先使用云文件ID路径
+          avatarToShow = userInfo.avatarUrl;
+        } 
+        // 最后使用普通URL或默认头像
+        else {
+          console.log('使用普通头像或默认头像:', userInfo.avatarUrl || '/images/tabbar/my.png');
+          avatarToShow = userInfo.avatarUrl || '/images/tabbar/my.png';
+        }
+        
+        this.setData({
+          role: app.globalData.role || 'beautician',
+          remainingUsage: app.globalData.remainingUsage || 0,
+          avatarUrl: avatarToShow,
+          nickName: userInfo.nickName || ''
         });
       }
       
-      this.setData({
-        role: app.globalData.role || 'beautician',
-        remainingUsage: app.globalData.remainingUsage || 0,
-        avatarUrl: userInfo.avatarUrl || '',
-        nickName: userInfo.nickName || ''
-      });
       wx.hideLoading();
     }).catch(err => {
       console.error('用户信息刷新失败:', err);
@@ -86,10 +111,21 @@ Page({
     
     // 先从全局数据中获取基本信息
     const userInfo = app.globalData.userInfo || {};
+    
+    // 确定要显示的头像URL
+    let avatarToShow = '';
+    if (userInfo.tempAvatarUrl) {
+      avatarToShow = userInfo.tempAvatarUrl;
+    } else if (userInfo.avatarUrl) {
+      avatarToShow = userInfo.avatarUrl;
+    } else {
+      avatarToShow = '/images/tabbar/my.png';
+    }
+    
     this.setData({
       role: app.globalData.role || 'beautician',
       remainingUsage: app.globalData.remainingUsage || 0,
-      avatarUrl: userInfo.avatarUrl || '',
+      avatarUrl: avatarToShow,
       nickName: userInfo.nickName || ''
     });
     
@@ -115,12 +151,42 @@ Page({
             createTimeFormatted = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
           }
           
+          // 处理头像URL
+          let updatedAvatarUrl = userData.avatarUrl || '';
+          if (updatedAvatarUrl.startsWith('cloud://')) {
+            // 如果是云文件路径，需要获取临时链接
+            wx.cloud.getTempFileURL({
+              fileList: [updatedAvatarUrl],
+              success: fileRes => {
+                if (fileRes.fileList && fileRes.fileList[0] && fileRes.fileList[0].tempFileURL) {
+                  console.log('获取到头像临时链接:', fileRes.fileList[0].tempFileURL);
+                  
+                  // 更新页面显示
+                  this.setData({
+                    avatarUrl: fileRes.fileList[0].tempFileURL
+                  });
+                  
+                  // 更新全局数据
+                  if (app.globalData.userInfo) {
+                    app.globalData.userInfo.tempAvatarUrl = fileRes.fileList[0].tempFileURL;
+                    wx.setStorageSync('userInfo', app.globalData.userInfo);
+                  }
+                }
+              },
+              fail: err => {
+                console.error('获取临时头像链接失败:', err);
+                this.setData({
+                  avatarUrl: '/images/tabbar/my.png'
+                });
+              }
+            });
+          }
+          
           this.setData({
             createTimeFormatted: createTimeFormatted,
             createTime: userData.createdAt,
             role: userData.role || 'beautician',
             remainingUsage: userData.remainingUsage || 0,
-            avatarUrl: userData.avatarUrl || '',
             nickName: userData.nickName || ''
           });
           

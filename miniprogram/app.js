@@ -118,8 +118,8 @@ App({
                   }
                 });
               } else {
-                // 测试头像URL是否有效
-                this.testImageUrl(userData.avatarUrl);
+                // 如果不是云存储路径，将头像上传到云存储
+                this.uploadAndUpdateAvatar(userData.avatarUrl);
               }
             }
             
@@ -174,7 +174,90 @@ App({
       },
       fail: err => {
         console.error('头像URL无效，将使用默认头像:', err);
-        // 如果头像无效，可以设置为默认头像
+        // 如果头像无效，使用默认头像
+        this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
+        wx.setStorageSync('userInfo', this.globalData.userInfo);
+      }
+    });
+  },
+
+  // 上传头像到云存储并更新用户资料
+  uploadAndUpdateAvatar: function(avatarUrl) {
+    // 如果是本地文件路径或http(s)链接
+    if (avatarUrl && (avatarUrl.startsWith('http') || avatarUrl.startsWith('wxfile://') || avatarUrl.startsWith('/tmp'))) {
+      console.log('检测到非云存储头像，准备上传到云存储:', avatarUrl);
+      
+      // 对于网络图片，先下载到本地临时文件
+      if (avatarUrl.startsWith('http')) {
+        wx.downloadFile({
+          url: avatarUrl,
+          success: res => {
+            if (res.statusCode === 200) {
+              this.uploadAvatarToCloud(res.tempFilePath);
+            } else {
+              console.error('下载头像失败', res);
+              this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
+              wx.setStorageSync('userInfo', this.globalData.userInfo);
+            }
+          },
+          fail: err => {
+            console.error('下载头像失败', err);
+            this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
+            wx.setStorageSync('userInfo', this.globalData.userInfo);
+          }
+        });
+      } else {
+        // 直接上传本地文件
+        this.uploadAvatarToCloud(avatarUrl);
+      }
+    } else {
+      // 如果都不是，使用默认头像
+      console.log('无法识别的头像URL格式，使用默认头像');
+      this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
+      wx.setStorageSync('userInfo', this.globalData.userInfo);
+    }
+  },
+
+  // 上传头像到云存储
+  uploadAvatarToCloud: function(filePath) {
+    const cloudPath = `avatars/${Date.now()}-${Math.floor(Math.random() * 1000)}.png`;
+    wx.cloud.uploadFile({
+      cloudPath: cloudPath,
+      filePath: filePath,
+      success: res => {
+        console.log('头像上传云存储成功，fileID:', res.fileID);
+        
+        // 更新用户资料中的头像为云存储路径
+        wx.cloud.callFunction({
+          name: 'updateUserProfile',
+          data: {
+            avatarUrl: res.fileID
+          },
+          success: updateRes => {
+            console.log('用户头像更新成功:', updateRes);
+            
+            // 更新全局数据和本地存储
+            this.globalData.userInfo.avatarUrl = res.fileID;
+            
+            // 获取临时访问链接
+            wx.cloud.getTempFileURL({
+              fileList: [res.fileID],
+              success: tempRes => {
+                if (tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL) {
+                  this.globalData.userInfo.tempAvatarUrl = tempRes.fileList[0].tempFileURL;
+                }
+                // 保存到本地
+                wx.setStorageSync('userInfo', this.globalData.userInfo);
+              }
+            });
+          },
+          fail: err => {
+            console.error('更新用户头像失败:', err);
+          }
+        });
+      },
+      fail: err => {
+        console.error('上传头像到云存储失败:', err);
         this.globalData.userInfo.avatarUrl = '/images/tabbar/my.png';
         wx.setStorageSync('userInfo', this.globalData.userInfo);
       }

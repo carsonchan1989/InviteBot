@@ -261,36 +261,56 @@ Page({
     return new Promise((resolve, reject) => {
       const cloudPath = `avatars/${Date.now()}-${Math.floor(Math.random() * 1000)}.jpg`;
       
-      // 对于wxfile://开头的路径，不需要下载，直接上传
-      console.log('准备上传头像，路径类型:', this.data.avatarUrl.substring(0, 10) + '...');
+      // 检查头像URL类型
+      console.log('准备上传头像，路径类型:', this.data.avatarUrl);
       
-      try {
-        // 直接上传文件，无需区分协议
-        wx.cloud.uploadFile({
-          cloudPath: cloudPath,
-          filePath: this.data.avatarUrl,
+      // 如果是http开头的网络图片，先下载到本地
+      if (this.data.avatarUrl && this.data.avatarUrl.startsWith('http') && !this.data.avatarUrl.startsWith('http://tmp')) {
+        wx.downloadFile({
+          url: this.data.avatarUrl,
           success: res => {
-            console.log('头像上传成功，fileID:', res.fileID);
-            resolve(res.fileID);
+            if (res.statusCode === 200) {
+              console.log('网络图片下载成功，临时路径:', res.tempFilePath);
+              // 上传下载后的临时文件
+              this.uploadToCloud(res.tempFilePath, cloudPath, resolve, reject);
+            } else {
+              console.error('下载网络图片失败:', res);
+              resolve('/images/tabbar/my.png');
+            }
           },
           fail: err => {
-            console.error('头像上传失败, 错误详情:', err);
-            
-            // 如果上传失败，使用默认头像
-            if (err.errMsg && (err.errMsg.includes('fail') || err.errMsg.includes('error'))) {
-              console.log('使用默认头像');
-              // 返回默认头像路径
-              resolve('/images/tabbar/my.png');
-            } else {
-              reject(err);
-            }
+            console.error('下载网络图片失败:', err);
+            resolve('/images/tabbar/my.png');
           }
         });
-      } catch (err) {
-        console.error('上传头像时发生异常:', err);
-        resolve('/images/tabbar/my.png');  // 发生异常时也使用默认头像
+      } 
+      // 本地路径直接上传
+      else {
+        this.uploadToCloud(this.data.avatarUrl, cloudPath, resolve, reject);
       }
     });
+  },
+  
+  // 执行上传到云存储的操作
+  uploadToCloud: function(filePath, cloudPath, resolve, reject) {
+    try {
+      wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: filePath,
+        success: res => {
+          console.log('头像上传成功，fileID:', res.fileID);
+          resolve(res.fileID);
+        },
+        fail: err => {
+          console.error('头像上传失败, 错误详情:', err);
+          // 上传失败使用默认头像
+          resolve('/images/tabbar/my.png');
+        }
+      });
+    } catch (err) {
+      console.error('上传头像时发生异常:', err);
+      resolve('/images/tabbar/my.png');  // 发生异常时使用默认头像
+    }
   },
 
   // 调用登录云函数
