@@ -8,21 +8,22 @@
   </view>
 
   <view class="redeem-box">
-    <view class="input-area">
-      <input class="code-input" 
-        value="{{code}}" 
-        bindinput="onCodeInput" 
-        placeholder="请输入邀请码" 
-        maxlength="10"
-        placeholder-class="placeholder" 
-      />
-      <view class="clear-btn" wx:if="{{code}}" bindtap="clearInput">×</view>
+    <view class="input-container">
+      <view class="input-area">
+        <input class="code-input" 
+          value="{{code}}" 
+          bindinput="onCodeInput" 
+          placeholder="请输入邀请码" 
+          maxlength="10"
+          placeholder-class="placeholder" 
+        />
+        <view class="clear-btn" wx:if="{{code}}" bindtap="clearInput">×</view>
+      </view>
+      <button class="redeem-btn {{!code ? 'disabled' : ''}}" bindtap="redeemCode" disabled="{{!code}}">
+        兑换
+      </button>
     </view>
     <view class="tip">请输入8位邀请码，字母区分大小写</view>
-    
-    <button class="redeem-btn {{!code ? 'disabled' : ''}}" bindtap="redeemCode" disabled="{{!code}}">
-      兑换
-    </button>
   </view>
 
   <view class="usage-explain">

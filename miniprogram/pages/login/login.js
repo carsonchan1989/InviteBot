@@ -92,14 +92,50 @@ Page({
   // 用户选择头像
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
+    
+    console.log('用户选择了头像，路径:', avatarUrl);
+    
     this.setData({
       avatarUrl,
     });
-    wx.showToast({
-      title: '头像已选择',
-      icon: 'success',
-      duration: 1500
-    });
+    
+    // 提前检查头像格式
+    if (avatarUrl && avatarUrl.startsWith('wxfile://')) {
+      console.log('检测到wxfile://格式的头像，尝试转换');
+      
+      // 尝试转换为临时文件路径
+      wx.compressImage({
+        src: avatarUrl,
+        quality: 80,
+        success: (res) => {
+          console.log('压缩头像成功，新路径:', res.tempFilePath);
+          this.setData({
+            avatarUrl: res.tempFilePath
+          });
+          wx.showToast({
+            title: '头像已选择',
+            icon: 'success',
+            duration: 1500
+          });
+        },
+        fail: (err) => {
+          console.error('压缩头像失败:', err);
+          // 继续使用原始路径
+          wx.showToast({
+            title: '头像已选择',
+            icon: 'success',
+            duration: 1500
+          });
+        }
+      });
+    } else {
+      wx.showToast({
+        title: '头像已选择',
+        icon: 'success',
+        duration: 1500
+      });
+    }
+    
     this.updateCurrentStep();
   },
 
@@ -166,7 +202,7 @@ Page({
     // 检查是否可以登录
     if (!this.canLogin()) {
       let message = '';
-      if (!this.data.avatarUrl) {
+      if (!this.data.avatarUrl || this.data.avatarUrl === '/images/tabbar/my.png') {
         message = '请先选择头像';
       } else if (!this.data.nickName) {
         message = '请输入昵称';
@@ -200,10 +236,69 @@ Page({
       mask: true
     });
 
+    // 检查头像，如果是临时路径且不是http开头，尝试上传到云存储
+    if (this.data.avatarUrl && 
+        (this.data.avatarUrl.startsWith('wxfile://') || 
+         this.data.avatarUrl.startsWith('tmp') || 
+         this.data.avatarUrl.startsWith('http://tmp'))) {
+      console.log('检测到临时头像路径，先上传到云存储:', this.data.avatarUrl);
+      this.uploadAvatarToCloud().then(fileId => {
+        this.callLoginFunction(fileId);
+      }).catch(err => {
+        console.error('上传头像失败:', err);
+        // 上传失败时使用默认头像继续登录流程
+        console.log('使用默认头像继续登录');
+        this.callLoginFunction('/images/tabbar/my.png');
+      });
+    } else {
+      // 头像不是临时路径，直接调用登录函数
+      this.callLoginFunction(this.data.avatarUrl);
+    }
+  },
+
+  // 上传头像到云存储
+  uploadAvatarToCloud: function() {
+    return new Promise((resolve, reject) => {
+      const cloudPath = `avatars/${Date.now()}-${Math.floor(Math.random() * 1000)}.jpg`;
+      
+      // 对于wxfile://开头的路径，不需要下载，直接上传
+      console.log('准备上传头像，路径类型:', this.data.avatarUrl.substring(0, 10) + '...');
+      
+      try {
+        // 直接上传文件，无需区分协议
+        wx.cloud.uploadFile({
+          cloudPath: cloudPath,
+          filePath: this.data.avatarUrl,
+          success: res => {
+            console.log('头像上传成功，fileID:', res.fileID);
+            resolve(res.fileID);
+          },
+          fail: err => {
+            console.error('头像上传失败, 错误详情:', err);
+            
+            // 如果上传失败，使用默认头像
+            if (err.errMsg && (err.errMsg.includes('fail') || err.errMsg.includes('error'))) {
+              console.log('使用默认头像');
+              // 返回默认头像路径
+              resolve('/images/tabbar/my.png');
+            } else {
+              reject(err);
+            }
+          }
+        });
+      } catch (err) {
+        console.error('上传头像时发生异常:', err);
+        resolve('/images/tabbar/my.png');  // 发生异常时也使用默认头像
+      }
+    });
+  },
+
+  // 调用登录云函数
+  callLoginFunction: function(avatarUrl) {
     // 准备用户信息
     const userInfo = {
       nickName: this.data.nickName,
-      avatarUrl: this.data.avatarUrl
+      avatarUrl: avatarUrl
     };
     
     console.log('准备调用login云函数，用户信息:', userInfo);
@@ -220,7 +315,7 @@ Page({
         console.log('返回结果详情:', JSON.stringify(res.result));
         
         if (res.result && res.result.code === 0) {
-          const { openid, role, remainingUsage, nickName, avatarUrl } = res.result;
+          const { openid, role, remainingUsage, nickName, avatarUrl, _id } = res.result;
           
           console.log('登录成功，用户角色:', role, '剩余使用次数:', remainingUsage);
           
@@ -228,16 +323,33 @@ Page({
           const app = getApp();
           app.globalData.userInfo = {
             openid: openid,
+            _id: _id,
             role: role || 'beautician', // 默认为美容师角色
             nickName: nickName,
             avatarUrl: avatarUrl
           };
           app.globalData.isLoggedIn = true;
+          app.globalData.isNewUser = false; // 重要：设置为false
           app.globalData.role = role || 'beautician';
           app.globalData.remainingUsage = remainingUsage || 0;
 
           // 保存到本地
           wx.setStorageSync('userInfo', app.globalData.userInfo);
+
+          // 获取头像临时链接并保存
+          if (avatarUrl && avatarUrl.startsWith('cloud://')) {
+            wx.cloud.getTempFileURL({
+              fileList: [avatarUrl],
+              success: res => {
+                if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+                  console.log('获取到头像临时链接:', res.fileList[0].tempFileURL);
+                  app.globalData.userInfo.tempAvatarUrl = res.fileList[0].tempFileURL;
+                  // 保存到本地
+                  wx.setStorageSync('userInfo', app.globalData.userInfo);
+                }
+              }
+            });
+          }
 
           // 显示成功提示
           wx.showToast({

@@ -949,7 +949,7 @@ exports.main = async (event, context) => {
         inviteInfo: testInviteInfo,
         isAIGenerated: false
       },
-      remainingUsage: isRegenerate ? 10 : 9
+      remainingUsage: isRegenerate ? 5 : 4  // 修改为一致的使用次数，5次为初始值，使用后减1为4次
     };
   } else {
     // 创建生成话术任务

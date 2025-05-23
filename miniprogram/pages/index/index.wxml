@@ -8,13 +8,13 @@
     <form bindsubmit="generateScript">
       <!-- 邀约对象 -->
       <view class="form-item">
-        <view class="form-item__label">邀约对象</view>
+        <view class="form-item__label">邀约对象 <text class="required">*</text></view>
         <input class="form-item__input" name="inviteTarget" placeholder="请输入邀约对象姓名或称呼" value="{{formData.inviteTarget}}"/>
       </view>
 
       <!-- 邀约日期 -->
       <view class="form-item">
-        <view class="form-item__label">邀约日期</view>
+        <view class="form-item__label">邀约日期 <text class="required">*</text></view>
         <picker mode="date" value="{{formData.inviteDate}}" start="{{minDate}}" bindchange="bindDateChange">
           <view class="form-item__input {{formData.inviteDate ? '' : 'placeholder'}}">
             {{formData.inviteDate || '请选择邀约日期'}}
@@ -24,8 +24,8 @@
 
       <!-- 邀约理由 -->
       <view class="form-item">
-        <view class="form-item__label">邀约理由</view>
-        <input class="form-item__input" name="inviteReason" placeholder="请输入邀约理由" value="{{formData.inviteReason}}"/>
+        <view class="form-item__label">邀约理由 <text class="required">*</text></view>
+        <input class="form-item__input" name="inviteReason" placeholder="肤况、体质、天气、节气、需求……" value="{{formData.inviteReason}}"/>
       </view>
 
       <!-- 邀约项目1（必填） -->

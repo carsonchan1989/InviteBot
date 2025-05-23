@@ -120,7 +120,7 @@ exports.main = async (event, context) => {
           msg: '注册成功',
           openid: openid,
           role: 'beautician',
-          remainingUsage: 5,
+          remainingUsage: 5, // 返回结果中的默认次数也是5次
           nickName: nickName || '',
           avatarUrl: avatarUrl || '',
           _id: addResult._id

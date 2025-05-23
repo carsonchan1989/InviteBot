@@ -76,7 +76,7 @@
     </view>
     
     <view class="btn-container">
-      <button class="login-btn {{!canLogin() ? 'disabled' : ''}}" bindtap="login">微信一键登录</button>
+      <button class="login-btn {{hasUserAgreed && hasPrivacyAgreed && avatarUrl && avatarUrl != '/images/tabbar/my.png' && nickName ? '' : 'disabled'}}" bindtap="login">微信一键登录</button>
     </view>
     
     <view class="auth-tip">

@@ -30,7 +30,7 @@ Page({
           icon: 'none'
         });
       }
-    } 
+    }
     // 处理taskId模式 - 开始轮询获取结果
     else if (options.mode === 'task' && options.taskId) {
       const taskId = options.taskId;
@@ -70,7 +70,7 @@ Page({
           icon: 'none'
         });
       }
-    } 
+    }
     // 兼容旧版本的taskId模式
     else if (options.taskId) {
       console.log('使用旧版本参数收到taskId:', options.taskId);
@@ -113,12 +113,12 @@ Page({
       // 开始轮询获取结果
       this.pollTaskResult(options.taskId);
     } else {
-      console.error('缺少必要参数, options:', options);
-      wx.showToast({
-        title: '页面参数错误',
-        icon: 'none'
-      });
+      console.log('没有传递参数，显示空白结果页');
     }
+  },
+
+  onShow: function() {
+    // 无需设置tabBar选中状态，因为此页面不再是tabBar的一部分
   },
 
   // 复制文本到剪贴板

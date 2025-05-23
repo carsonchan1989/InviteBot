@@ -26,7 +26,11 @@ Page({
     
     // 检查用户是否登录      
     const app = getApp();
-    if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+    
+    // 检查本地存储中是否有用户信息
+    const userInfo = wx.getStorageSync('userInfo');
+    if (!userInfo || !userInfo.openid || app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+      console.log('本地存储中无用户信息或用户未登录');
       this.redirectToLogin();
       return;
     }
@@ -38,9 +42,18 @@ Page({
   // 检查登录状态，如果未登录则跳转到登录页面
   checkLoginStatus: function() {
     const app = getApp();
+    
+    // 检查本地存储中是否有用户信息
+    const userInfo = wx.getStorageSync('userInfo');
+    if (!userInfo || !userInfo.openid) {
+      console.log('本地存储中无用户信息，直接跳转登录页');
+      this.redirectToLogin();
+      return;
+    }
 
     // 如果已知是新用户或者未登录，直接跳转到登录页
     if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+      console.log('全局数据标记用户未登录');
       this.redirectToLogin();
       return;
     }
@@ -52,8 +65,10 @@ Page({
         if (app.globalData.isAppReady) {
           clearInterval(checkReady);
           if (app.globalData.isNewUser || !app.globalData.isLoggedIn) {
+            console.log('应用初始化完成，但用户未登录');
             this.redirectToLogin();
           } else {
+            console.log('应用初始化完成，用户已登录');
             this.getUserInfo();
           }
         }
@@ -62,12 +77,15 @@ Page({
       // 设置最长等待时间
       setTimeout(() => {
         clearInterval(checkReady);
-        if (!app.globalData.isLoggedIn) {
+        const currentUserInfo = wx.getStorageSync('userInfo');
+        if (!currentUserInfo || !currentUserInfo.openid || !app.globalData.isLoggedIn) {
+          console.log('等待超时，用户未登录，跳转登录页');
           this.redirectToLogin();
         }
       }, 5000);
     } else {
       // 应用已准备好，获取用户信息
+      console.log('应用已初始化，正在获取用户信息');
       this.getUserInfo();
     }
   },
@@ -219,7 +237,7 @@ Page({
           // 暂存结果数据到全局变量
           app.globalData.tempScriptData = res.result.data;
           
-          // 导航到结果页面，不传递大量参数，只传递标识
+          // 导航到结果页面，使用navigateTo
           wx.navigateTo({
             url: `/pages/result/result?mode=direct`,
             fail: (navErr) => {
@@ -241,7 +259,7 @@ Page({
           
           app.globalData.remainingUsage = res.result.remainingUsage;
           
-          // 进入结果页面并开始轮询
+          // 进入结果页面并开始轮询，使用navigateTo
           wx.navigateTo({
             url: `/pages/result/result?mode=task&taskId=${taskId}`,
             fail: (navErr) => {

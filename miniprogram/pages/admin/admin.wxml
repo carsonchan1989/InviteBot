@@ -41,7 +41,7 @@
           <view class="icon-time"></view>
           <view class="menu-item__label">注册时间</view>
         </view>
-        <view class="menu-item__value">{{createTimeFormatted}}</view>
+        <view class="menu-item__value time-value">{{createTimeFormatted}}</view>
       </view>
     </view>
   </view>
@@ -132,6 +132,6 @@
   </view>
   
   <view class="footer">
-    <text class="footer-text">美容师邀约话术生成器 v1.0</text>
+    <text class="footer-text">邀约话术生成器v1.0.5</text>
   </view>
 </view> 

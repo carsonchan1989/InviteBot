@@ -3,11 +3,14 @@
   padding: 30rpx;
   min-height: 100vh;
   background-color: #f7f7f7;
+  box-sizing: border-box;
 }
 
 /* 页面头部 */
 .header {
   margin-bottom: 40rpx;
+  padding: 0 10rpx;
+  text-align: center;
 }
 
 .title {
@@ -15,11 +18,13 @@
   font-weight: bold;
   margin-bottom: 20rpx;
   color: #333;
+  text-align: center;
 }
 
 .usage-info {
   font-size: 28rpx;
   color: #666;
+  text-align: center;
 }
 
 .usage-count {
@@ -27,18 +32,32 @@
   font-weight: bold;
 }
 
-/* 兑换区域 */
-.redeem-box {
+/* 卡片通用样式 */
+.redeem-box,
+.usage-explain {
   background-color: #fff;
   border-radius: 15rpx;
   padding: 40rpx;
   margin-bottom: 40rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  width: calc(100% - 20rpx);
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 输入框和按钮的容器 */
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
 }
 
 .input-area {
   position: relative;
-  margin-bottom: 20rpx;
+  flex: 2;
+  margin-right: 20rpx;
 }
 
 .code-input {
@@ -49,6 +68,8 @@
   font-size: 32rpx;
   color: #333;
   letter-spacing: 2rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .placeholder {
@@ -68,11 +89,11 @@
 .tip {
   font-size: 24rpx;
   color: #999;
-  margin-bottom: 40rpx;
+  margin-bottom: 20rpx;
 }
 
 .redeem-btn {
-  width: 100%;
+  flex: 1;
   height: 90rpx;
   line-height: 90rpx;
   background-color: #7B55D0;
@@ -80,6 +101,8 @@
   border-radius: 8rpx;
   font-size: 32rpx;
   box-shadow: 0 4rpx 10rpx rgba(123, 85, 208, 0.3);
+  padding: 0;
+  margin: 0;
 }
 
 .redeem-btn.disabled {
@@ -88,13 +111,6 @@
 }
 
 /* 使用说明 */
-.usage-explain {
-  background-color: #fff;
-  border-radius: 15rpx;
-  padding: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-}
-
 .explain-title {
   font-size: 30rpx;
   font-weight: bold;

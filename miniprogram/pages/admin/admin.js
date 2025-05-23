@@ -16,21 +16,15 @@ Page({
     // 设置自定义tabBar的选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
-        selected: 1
+        selected: 2
       });
     }
     
     // 获取全局应用实例
     const app = getApp();
     
-    // 检查是否需要强制刷新用户信息
-    if (app.globalData.needRefreshUserInfo) {
-      console.log('检测到需要刷新用户信息');
-      app.globalData.needRefreshUserInfo = false; // 重置标志
-      this.forceRefreshUserInfo();
-    } else {
-      this.getUserInfo();
-    }
+    // 每次显示页面时强制刷新用户信息，确保手机端也能正常显示头像
+    this.forceRefreshUserInfo();
   },
 
   // 强制刷新用户信息
@@ -44,6 +38,31 @@ Page({
     const app = getApp();
     app.getUserInfo().then(userInfo => {
       console.log('用户信息刷新成功:', userInfo);
+      
+      // 手动检查并下载头像
+      if (userInfo && userInfo.avatarUrl && userInfo.avatarUrl.startsWith('cloud://')) {
+        // 如果是云文件ID，需要获取临时链接
+        wx.cloud.getTempFileURL({
+          fileList: [userInfo.avatarUrl],
+          success: res => {
+            if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+              console.log('获取到头像临时链接:', res.fileList[0].tempFileURL);
+              // 将临时链接保存到本地
+              this.setData({
+                avatarUrl: res.fileList[0].tempFileURL
+              });
+              
+              // 更新全局数据中的临时URL
+              if (app.globalData.userInfo) {
+                app.globalData.userInfo.tempAvatarUrl = res.fileList[0].tempFileURL;
+                // 更新本地存储
+                wx.setStorageSync('userInfo', app.globalData.userInfo);
+              }
+            }
+          }
+        });
+      }
+      
       this.setData({
         role: app.globalData.role || 'beautician',
         remainingUsage: app.globalData.remainingUsage || 0,
@@ -297,7 +316,7 @@ Page({
   showAbout: function() {
     wx.showModal({
       title: '关于我们',
-      content: '美容师邀约话术生成器\n版本：1.0.0\n为美容师提供专业客户邀约话术，帮助提升客户转化率。',
+      content: '美容师邀约话术生成器 \n 版本：1.0.5 \n 为美容师提供专业客户邀约话术，帮助提升客户转化率。',
       showCancel: false
     });
   },

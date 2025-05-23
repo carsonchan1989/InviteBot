@@ -283,6 +283,15 @@
   margin-left: auto;
 }
 
+/* 确保注册时间在手机端不会分行显示 */
+.time-value {
+  min-width: 180rpx;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .logout {
   color: #e64340;
   font-weight: 500;

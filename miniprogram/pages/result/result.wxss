@@ -3,6 +3,8 @@
   padding: 20rpx;
   background-color: #f6f6f6;
   min-height: 100vh;
+  padding-bottom: 180rpx; /* 增加底部padding，为tabbar留出空间 */
+  box-sizing: border-box;
 }
 
 .header {
@@ -137,9 +139,11 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 40rpx;
-  margin-bottom: 40rpx;
+  margin-bottom: 60rpx; /* 增加底部边距 */
   padding: 0 20rpx;
   width: 100%;
+  position: relative; /* 确保按钮显示在tabbar上方 */
+  z-index: 10; /* 增加z-index确保在tabbar上方 */
 }
 
 .primary-btn, .secondary-btn {

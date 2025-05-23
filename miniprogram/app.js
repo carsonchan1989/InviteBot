@@ -15,19 +15,29 @@ App({
       });
     }
 
-    // 获取用户信息
+    // 获取本地存储的用户信息，但每次都强制从服务器刷新一次
     this.getGlobalUserInfo();
     
-    // 应用启动时获取用户剩余使用次数和信息
-    this.getUserInfo().then(userInfo => {
+    // 应用启动时强制从服务器获取用户最新信息
+    this.getUserInfo(true).then(userInfo => {
       console.log('应用启动完成，用户信息:', userInfo);
       this.globalData.isAppReady = true;
     }).catch(err => {
       console.error('获取用户信息失败:', err);
       this.globalData.isAppReady = true;
-      // 如果获取用户信息失败，并且不是因为网络原因，则认为用户未登录
-      if (err.errCode !== -1) {
+      
+      // 检查错误信息，判断是否是"用户不存在"
+      if (err && err.result && err.result.msg === '用户不存在，请重新登录') {
+        console.log('用户不存在，标记为新用户');
         this.globalData.isNewUser = true;
+        this.globalData.isLoggedIn = false;
+        wx.removeStorageSync('userInfo');
+      }
+      // 如果获取用户信息失败，并且不是因为网络原因，则认为用户未登录
+      else if (err.errCode !== -1) {
+        console.log('登录状态异常，标记为新用户');
+        this.globalData.isNewUser = true;
+        this.globalData.isLoggedIn = false;
       }
     });
   },
@@ -36,29 +46,27 @@ App({
   getGlobalUserInfo: function() {
     // 获取本地存储的用户信息
     const userInfo = wx.getStorageSync('userInfo');
-    if (userInfo) {
+    if (userInfo && userInfo.openid) {
       this.globalData.userInfo = userInfo;
       this.globalData.isLoggedIn = true;
       this.globalData.role = userInfo.role || 'beautician';
       console.log('从本地存储获取用户信息:', userInfo);
       
-      // 检查头像URL是否为云文件ID格式，如果不是则可能是临时链接，需要刷新用户信息
-      if (userInfo.avatarUrl && !userInfo.avatarUrl.startsWith('cloud://')) {
-        console.log('检测到头像可能是临时链接，将在启动时刷新用户信息');
-        this.globalData.needRefreshUserInfo = true;
-      }
+      // 始终在启动时刷新用户信息，确保头像等数据最新
+      this.globalData.needRefreshUserInfo = true;
     } else {
       // 本地没有用户信息，标记为新用户
       this.globalData.isNewUser = true;
+      this.globalData.isLoggedIn = false;
       console.log('本地没有用户信息，可能是新用户');
     }
   },
   
   // 获取用户信息和剩余使用次数
-  getUserInfo: function() {
+  getUserInfo: function(forceRefresh = false) {
     return new Promise((resolve, reject) => {
       // 如果是新用户且没有本地用户信息，直接返回错误
-      if (this.globalData.isNewUser && !this.globalData.userInfo) {
+      if (this.globalData.isNewUser && !this.globalData.userInfo && !forceRefresh) {
         console.log('新用户需要先登录');
         reject({errCode: -100, errMsg: '用户未登录'});
         return;
@@ -75,22 +83,42 @@ App({
             this.globalData.remainingUsage = userData.remainingUsage || 0;
             this.globalData.role = userData.role || 'beautician';
             this.globalData.isNewUser = false;
+            this.globalData.isLoggedIn = true;
             
             // 更新用户信息
             if (!this.globalData.userInfo) {
               this.globalData.userInfo = {
                 openid: userData.openid,
+                _id: userData._id,
                 role: userData.role || 'beautician'
               };
-              this.globalData.isLoggedIn = true;
+            } else {
+              // 确保_id字段存在
+              this.globalData.userInfo._id = userData._id;
             }
             
             // 更新头像和昵称
             if (userData.avatarUrl) {
               this.globalData.userInfo.avatarUrl = userData.avatarUrl;
               
-              // 测试头像URL是否有效
-              if (userData.avatarUrl.startsWith('cloud://') || userData.avatarUrl.startsWith('http')) {
+              // 如果是云存储路径，获取临时访问链接
+              if (userData.avatarUrl.startsWith('cloud://')) {
+                wx.cloud.getTempFileURL({
+                  fileList: [userData.avatarUrl],
+                  success: res => {
+                    if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+                      console.log('获取到头像临时链接:', res.fileList[0].tempFileURL);
+                      this.globalData.userInfo.tempAvatarUrl = res.fileList[0].tempFileURL;
+                      // 保存到本地
+                      wx.setStorageSync('userInfo', this.globalData.userInfo);
+                    }
+                  },
+                  fail: err => {
+                    console.error('获取头像临时链接失败:', err);
+                  }
+                });
+              } else {
+                // 测试头像URL是否有效
                 this.testImageUrl(userData.avatarUrl);
               }
             }
@@ -107,19 +135,23 @@ App({
             
             resolve(this.globalData.userInfo);
           } else {
-            console.log('获取用户信息失败:', res);
+            console.log('获取用户信息失败:', res.result);
             // 如果返回用户不存在的错误，标记为新用户
             if (res.result && res.result.code === -1 && res.result.msg === '用户不存在，请重新登录') {
               this.globalData.isNewUser = true;
+              this.globalData.isLoggedIn = false;
               wx.removeStorageSync('userInfo');
               this.globalData.userInfo = null;
-              this.globalData.isLoggedIn = false;
             }
             reject(res);
           }
         },
         fail: err => {
           console.error('[云函数] [getUser] 调用失败', err);
+          // 网络错误时不要清除本地登录状态
+          if (err.errCode !== -1) {
+            this.globalData.isLoggedIn = false;
+          }
           reject(err);
         }
       });
