@@ -2,6 +2,24 @@ Page({
     data: {    remainingUsage: 0,    formData: {      inviteTarget: '',      inviteDate: '',      inviteReason: '',      inviteProject: '',      inviteProject2: '',      inviteProject3: ''    },    minDate: '2023-01-01'
   },
 
+  // 分享给朋友
+  onShareAppMessage: function() {
+    return {
+      title: '美容师邀约话术生成器',
+      path: '/pages/index/index',
+      imageUrl: '/images/share-image.png' // 可以根据实际情况修改或删除此行
+    };
+  },
+  
+  // 分享到朋友圈
+  onShareTimeline: function() {
+    return {
+      title: '美容师邀约话术生成器 - 一键生成专业客户邀约话术',
+      query: '',
+      imageUrl: '/images/share-image.png' // 可以根据实际情况修改或删除此行
+    };
+  },
+
   onLoad: function(options) {
     // 获取当前日期作为最小日期
     const now = new Date();

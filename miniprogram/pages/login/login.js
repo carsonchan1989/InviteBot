@@ -7,14 +7,29 @@ Page({
     nickName: '',  // 用户昵称
     currentStep: 1,  // 当前步骤：1-选择头像昵称, 2-同意授权, 3-登录
     isRegistered: false,  // 是否已注册用户
-    showSimpleLogin: false  // 显示简化登录界面
+    showSimpleLogin: false,  // 显示简化登录界面
+    returnToSnapshot: false, // 是否在登录后返回快照页面
+    pendingSnapshotId: '' // 等待查看的快照ID
   },
 
   onLoad: function(options) {
-    // 检查是否已经登录，如果已登录则直接跳转到首页
+    console.log('login页面options:', options);
+    
+    // 检查是否需要返回快照页面
+    if (options.returnToSnapshot) {
+      const pendingSnapshotId = wx.getStorageSync('pendingSnapshotId') || '';
+      console.log('登录后需要返回快照页面，快照ID:', pendingSnapshotId);
+      
+      this.setData({
+        returnToSnapshot: true,
+        pendingSnapshotId: pendingSnapshotId
+      });
+    }
+    
+    // 检查是否已经登录，如果已登录则直接跳转
     const app = getApp();
     if (app.globalData.isLoggedIn) {
-      this.redirectToIndex();
+      this.redirectAfterLogin();
       return;
     }
 
@@ -380,7 +395,7 @@ Page({
 
           // 延迟跳转，让用户看到成功提示
           setTimeout(() => {
-            this.redirectToIndex();
+            this.redirectAfterLogin();
           }, 1500);
         } else {
           // 登录失败处理
@@ -408,11 +423,30 @@ Page({
     });
   },
 
-  // 跳转到首页
+  // 登录成功后的重定向处理
+  redirectAfterLogin: function() {
+    // 检查是否需要返回快照页面
+    if (this.data.returnToSnapshot && this.data.pendingSnapshotId) {
+      console.log('登录成功，返回快照页面，快照ID:', this.data.pendingSnapshotId);
+      
+      // 清除存储的快照ID
+      wx.removeStorageSync('pendingSnapshotId');
+      
+      // 跳转到快照页面
+      wx.redirectTo({
+        url: `/pages/result/result?snapshot=${this.data.pendingSnapshotId}`
+      });
+    } else {
+      // 如果不需要返回快照页面，则跳转到首页
+      wx.switchTab({
+        url: '/pages/index/index'
+      });
+    }
+  },
+
+  // 跳转到首页 (保留此函数，但更改为调用redirectAfterLogin)
   redirectToIndex: function() {
-    wx.switchTab({
-      url: '/pages/index/index'
-    });
+    this.redirectAfterLogin();
   },
 
   // 显示隐私政策

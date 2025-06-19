@@ -4,6 +4,11 @@
     <button class="back-btn" size="mini" bindtap="backToIndex">返回</button>
   </view>
 
+  <!-- 快照提示 -->
+  <view class="snapshot-tip" wx:if="{{isFromShare}}">
+    <text>您正在查看分享的话术内容</text>
+  </view>
+
   <view class="card invite-info" wx:if="{{inviteInfo}}">
     <view class="card-title">邀约信息</view>
     <view class="info-item">
@@ -34,16 +39,18 @@
 
   <view class="card tips">
     <view class="card-title">提示信息</view>
-    <view class="tips-content">请根据实际情况选择合适的话术，长按文字可复制。</view>
+    <view class="tips-content">请根据实际情况选择合适的话术，长按文字可复制。您也可以分享给其他美容师参考使用。</view>
   </view>
 
   <view class="scripts-container">
     <block wx:if="{{scriptList.length > 0}}">
       <block wx:for="{{scriptList}}" wx:key="key">
-        <view class="script-card">
+        <view class="script-card {{currentIndex === index ? 'active' : ''}}" bindtap="onScriptTap" data-index="{{index}}">
           <view class="script-title">{{item.reason}}</view>
           <view class="script-content" bindlongpress="copyText" data-text="{{item.content}}">{{item.content}}</view>
-          <view class="copy-btn" bindtap="copyText" data-text="{{item.content}}">复制</view>
+          <view class="script-actions">
+            <view class="copy-btn" bindtap="copyText" data-text="{{item.content}}">复制</view>
+          </view>
         </view>
       </block>
     </block>
@@ -96,8 +103,9 @@
     </view>
   </view>
 
+  <!-- 底部按钮 -->
   <view class="action-buttons">
     <button class="primary-btn" bindtap="backToIndex">返回修改</button>
-    <button class="secondary-btn" bindtap="regenerate">重新生成</button>
+    <button class="secondary-btn" bindtap="regenerate" wx:if="{{!isFromShare}}">重新生成</button>
   </view>
 </view> 

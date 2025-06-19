@@ -32,6 +32,19 @@
   border-radius: 8rpx;
 }
 
+/* 快照提示样式 */
+.snapshot-tip {
+  background-color: #e4f2ff;
+  color: #1989fa;
+  font-size: 24rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 8rpx;
+  text-align: center;
+  margin-bottom: 20rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* 卡片通用样式 */
 .card {
   background-color: #fff;
@@ -80,6 +93,14 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+/* 选中状态的脚本卡片样式 */
+.script-card.active {
+  background-color: #f8f4ff;
+  border: 1px solid #7B55D0;
+  box-shadow: 0 4rpx 12rpx rgba(123, 85, 208, 0.15);
 }
 
 .script-title {
@@ -100,15 +121,33 @@
   word-break: break-all;
 }
 
+/* 脚本操作按钮区域 */
+.script-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 16rpx;
+}
+
 .copy-btn {
-  position: absolute;
-  right: 20rpx;
-  bottom: 20rpx;
   background: #7B55D0;
   color: #fff;
   font-size: 24rpx;
   padding: 8rpx 16rpx;
   border-radius: 30rpx;
+  margin-right: 16rpx;
+}
+
+/* 脚本卡片中的分享按钮 */
+.share-btn {
+  background: #6fb3ec;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 0 16rpx;
+  border-radius: 30rpx;
+  line-height: 1.8;
+  height: auto;
+  margin: 0;
 }
 
 /* 邀约信息样式 */
@@ -138,6 +177,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   margin-top: 40rpx;
   margin-bottom: 60rpx; /* 增加底部边距 */
   padding: 0 20rpx;
@@ -160,6 +200,7 @@
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  margin-bottom: 20rpx;
 }
 
 .primary-btn {
@@ -171,6 +212,58 @@
   background: #fff;
   color: #7B55D0;
   border: 1rpx solid #7B55D0;
+}
+
+/* 底部分享按钮 */
+.share-button {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  background-color: #6fb3ec;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  margin-top: 10rpx;
+}
+
+/* 悬浮分享按钮 */
+.float-share-container {
+  position: fixed;
+  right: 30rpx;
+  bottom: 180rpx;
+  z-index: 100;
+}
+
+.float-share-btn {
+  background-color: #6fb3ec;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+}
+
+.share-icon {
+  font-size: 36rpx;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4rpx;
+}
+
+.share-text {
+  font-size: 24rpx;
+  color: #fff;
+  line-height: 1;
 }
 
 /* 添加空数据提示的样式 */
@@ -207,98 +300,76 @@
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
 }
 
+/* 宣传部分 */
 .promo-section {
-  margin-top: 50rpx;
-  margin-bottom: 50rpx;
-  background-color: #fff;
-  border-radius: 12rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-  width: calc(100% - 60rpx);
+  width: 100%;
+  margin-top: 20rpx;
+  margin-bottom: 30rpx;
 }
 
 .qrcode-container {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 50rpx;
-  width: 100%;
-  padding: 0 10rpx;
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
 }
 
 .qrcode {
-  width: 220rpx;
-  height: 220rpx;
-  flex-shrink: 0;
+  width: 180rpx;
+  height: 180rpx;
+  margin-right: 20rpx;
 }
 
 .qrcode-text {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  max-width: 62%;
+  flex: 1;
 }
 
 .blue-text {
-  color: #0066cc;
-  font-size: 27rpx;
-  line-height: 1.8;
+  color: #1989fa;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
   font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.5rpx;
 }
 
 .tip-text {
-  color: #ff6600;
-  font-size: 24rpx;
-  line-height: 1.5;
+  font-size: 22rpx;
+  color: #999;
   margin-top: 10rpx;
-  font-weight: 500;
 }
 
 .slogan-container {
-  margin-top: 20rpx;
-  width: 100%;
-  padding: 0 10rpx;
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
 }
 
 .slogan-line {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12rpx;
-  font-size: 34rpx;
-  line-height: 2;
+  margin-bottom: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
 }
 
 .slogan-prefix {
-  color: #999;
-  text-align: right;
-  flex: 1;
-  padding-right: 0;
-  font-weight: 500;
+  color: #333;
 }
 
 .slogan-highlight {
-  color: #f7cf6d;
-  margin: 0 6rpx;
-  font-weight: 500;
+  color: #ff6767;
+  font-weight: bold;
+  margin: 0 4rpx;
 }
 
 .slogan-suffix {
-  color: #999;
-  margin-right: 6rpx;
-  font-weight: 500;
+  color: #333;
 }
 
 .slogan-bold {
-  color: #333;
+  color: #1989fa;
   font-weight: bold;
-  flex: 1;
-  text-align: left;
-  padding-left: 0;
+  margin-left: 4rpx;
 } 
